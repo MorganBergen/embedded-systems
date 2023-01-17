@@ -24,7 +24,11 @@ The conceptual material consists of
 
 - cpu and memory architecture, how instructions get executed in the hardware and the micro-architecture of a basic RISC-V, single-cycle processor.
 
--------------------------------------
+------------------------------------------------------------
+
+**contents**
+
+1.  [lecture 01](./course/01-lecture.md)
 
 ### embedded systems c / c++
 

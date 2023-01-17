@@ -23,3 +23,32 @@ The conceptual material consists of
 - scheduling and real-time scheduling concepts in linux
 
 - cpu and memory architecture, how instructions get executed in the hardware and the micro-architecture of a basic RISC-V, single-cycle processor.
+
+-------------------------------------
+
+### embedded systems c / c++
+
+to develop embedded systems, you must first understand c/c++ programming language particularly embedded c.  embedded c is a collection of language extensions for c programming developed by the c standard group to solve concerns of commonality between c extensions for different embedded systems.  The one more important distinction between c and embedded c is about _usage_.  Therefore it is strongly advised to grasp certain fundamental concepts of c programming language in order to fully comprehend both the theory and labs of this course.
+
+**topcs**
+1.  variables
+2.  data types
+3.  operators
+4.  conditions
+5.  loops
+6.  string
+7.  user input
+8.  arrays
+9.  pointers
+10. functions
+
+
+### embedded systems c / c programming resources
+
+[embedded c w3 schools](https://www.w3schools.com/c/index.php)
+
+[introduction to the c programming language for embedded applications](https://www.allaboutcircuits.com/technical-articles/introduction-to-the-c-programming-language-for-embedded-applications/)
+
+[online gdb](https://www.onlinegdb.com/online_c_compiler)
+
+[c programming tutorial](https://www.youtube.com/watch?v=KJgsSFOSQv0)

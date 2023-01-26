@@ -28,7 +28,7 @@ The conceptual material consists of
 
 **contents**
 
-1.  [lecture 01](./course/01-lecture.md)
+1.  [lecture 01](./01-lecture.md)
 
 ### embedded systems c / c++
 

@@ -12,5 +12,4 @@ In EECS388 labs, you will learn how to use microcontrollers and embedded process
 
 **lab assignments**
 
-1.  8 lab assignments, 1 project
-2.  each lab assignment will be published by starting of every week
+1. [lab01](./lab01/README.md)

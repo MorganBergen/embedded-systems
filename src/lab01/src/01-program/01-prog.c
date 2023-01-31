@@ -1,7 +1,7 @@
-/* @file    01-prog.c
- * @author  morgan bergen
- * @date    jan 26 2023
- * @brief   program 1
+/* @file            01-prog.c
+ * @author          morgan bergen
+ * @date            jan 26 2023
+ * @brief           program 1 for lab01
  * @description
  *
  * write a program that will work as a basic calculator that can perform:
@@ -115,6 +115,8 @@ int main() {
      *
      * &        address-of operator
      * @brief   this operator is used to reference the address of the variable in memory
+     *          in our case the address of the variable value1 is passed into the function scanf and the value 
+     *          after the user presses enter will be stored at the address of value1
      *
      * &value1  pass by reference variable value1
      * @brief   value1's memory address 0x16d00f204 is passed to scanf so that the function can store the value
@@ -140,20 +142,33 @@ int main() {
      *          this checks the value of operator and compares it to the value of the character '+'
      *          if the value of operator is equal to the value of the character '+' then the condition is true
      */
+
+    // conditional for sum operation
     if (operator == '+') {
-        total = value1 + value2;
         /*
+         * total    variable declaration identifier name is total of type int
+         * @brief   the variable total is declared and initialized to the value of value1 + value2
+         */
+        total = value1 + value2;
+
+        // print statments for user output
         printf("sum of ");
         printf("%d", value1);
         printf(" and ");
         printf("%d", value2);
         printf(" is ");
         printf("%d", total);
-        */ 
-        printf("%d%d%d", value1, value2, total);
 
+    // conditional for subtraction operation
     } else if (operator == '-') {
+
+        /*
+         * total    variable declaration identifier name is total of type int
+         * @brief   the variable total is declared and initialized to the value of value1 - value2
+         */
         total = value1 - value2;
+
+        // print statements for user output
         printf("subtraction of ");
         printf("%d", value1);
         printf(" and ");
@@ -161,8 +176,16 @@ int main() {
         printf(" is ");
         printf("%d", total);
 
+    // conditional for multiplication operation
     } else if (operator == '*') {
+        
+        /*
+         * total    variable declaration identifier name is total of type int
+         * @brief   the variable total is declared and initialized to the value of value1 * value2
+         */
         total = value1 * value2;
+
+        // print statements for user output
         printf("multiplication of ");
         printf("%d", value1);
         printf(" and ");
@@ -170,8 +193,16 @@ int main() {
         printf(" is ");
         printf("%d", total);
 
+    // conditional for division operation
     } else if (operator == '/') {
+
+        /*
+         * total    variable declaration identifier name is total of type int
+         * @brief   the variable total is declared and initialized to the value of value1 / value2
+         */
         total = value1 / value2;
+
+        // print statements for user output
         printf("division of ");
         printf("%d", value1);
         printf(" and ");
@@ -180,16 +211,15 @@ int main() {
         printf("%d", total);
 
     } else {
+
+        // edge case if user input is invalid
         printf("invalid operator");
     }
-    
+    // adding an additional line for readability
     printf("\n");
     
+    /* return(0);
+     * @brief   the return statement is used to exit a function and return a value to the calling function
+     */
     return(0);
 }
-
-/*
- * how to compile a c file
- * gcc -o a 01-prog.c
- * ./a
- */

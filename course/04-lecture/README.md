@@ -322,7 +322,63 @@ int main() {
     - otherwise, the program will just run once and exit
 - such infinite loop can be designed using `while (always true) { ... }` or `do { ... } while (always true);`
 
+## functions in c
+
+- a function is a group of statements that together perform a task
+- every c program has at least one function, which is `main()`
+- a standard c library provides many built-in functions
+- we can define additional functions
+- use of functions involves three things
+- [function definition](#function-definition)
+- [function declaration](#function-declaration)
+- [function call](#function-call)
+
+### function definition
+
+- contains the function header and function body
+
+**function definition format**
+```c
+return_type function_name(parameter list) {
+    // body of the function
+}
+```
+
+**function definition example**
+```c
+int add(int a, int b) {
+    return (a + b);
+}
+```
+
+- if you have multiple functions, defining all within `main()` function is not desirable
+- use header files to define functions in a separate file
+
+### function declaration
+
+- function declaration tells the compiler about a function name and how ot call the function
+- the actual body of the function can be defined separately
 
 ```c
-while(1) {
-    gp
+#include <stdio.h>
+int add(int a, int b);
+void main() {
+    int c = add(1, 1);
+    printf("%d\n", c);
+}
+```
+- parameter names are not important in function declaration only their type is required, so both `int add(int, int)` and `int add(int x, int y)` are valid declarations
+
+### function call
+
+- to call a function you simply need to pass the required parameters along with the function name, and if the function returns a value
+
+```c
+#include <stdio.h>
+int add(int a, int b);
+
+void main() {
+    int c = add(1, 1); // calling the function
+    printf("%d\n", c);
+}
+

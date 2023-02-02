@@ -19,12 +19,14 @@ int main() {
      * currently cp is undefined
      */
     int cp;
-
+    int limit;
+    printf("enter a limit: ");
+    scanf("%d", &limit);
     /* initialization   i = 2, starts at 2
      * condition        i < 100, stops looping at 99
      * increment        i + 1, increments by 1 after each loop
      */
-    for (int i = 2; i < 100; i++) {
+    for (int i = 2; i < limit; i++) {
         /* check prime is initialized as true
          * we start with assuming that it's true
          */

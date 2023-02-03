@@ -40,5 +40,21 @@ int main()
         }
     }
 
+    // convert decimal to binary
+    int binary[100];
+    int k = 0;
+    while (decimal != 0)
+    {
+        binary[k] = decimal % 2;
+        decimal = decimal / 2;
+        k++;
+    }
+    printf("binary number = ");
+    for (int i = k - 1; i >= 0; i--)
+    {
+        printf("%d\n", binary[i]);
+    }
+
+
     return 0;
 }

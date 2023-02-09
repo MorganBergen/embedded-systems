@@ -1,59 +1,67 @@
+/*
+ * @author          morgan bergen
+ * @date            wed feb 8 2023
+ * @file            04-program.c
+ * @brief           write a c program to create a converter from binary to hexadecimal
+ *                  and vice versa
+ */
+
 #include <stdio.h>
 #include <math.h>
 
+int binary_to_hex(int binary[], int size, char hex[]);
+int hex_to_binary(char hex[], int size, int binary[]);
+
 int main() {
-    int binary[100];  // array to store binary number
-    int k = 0;        // counter for binary array
-    int decimal = 14;  // variable to store decimal equivalent
-    int i = 0;        // counter for binary array
-    char hexa[100];   // array to store hexadecimal equivalent
+    
+    // initialize variables, binary array, and hex array
+    int binary[4] = {1, 0, 1, 1};
+    char hex[2] = {'A', 'B'};
+    int size = 4;
+    int size2 = 2;
 
-    // convert decimal to binary
-    while (decimal != 0) {
-        binary[k] = decimal % 2;
-        decimal = decimal / 2;
-        k++;
-    }
+    // call functions to convert binary to hex and hex to binary
+    // parameters are the array, the size of the array, and the array to be converted to
+    // the function returns the size of the converted array
+    binary_to_hex(binary, size, hex);
+    hex_to_binary(hex, size2, binary);
 
-    // reverse the binary number
-    int l = 0;
-    for (i = k - 1; i >= 0; i--) {
-        binary[l++] = binary[i];
-    }
-
-    // convert binary to decimal
-    decimal = 0;
-    for (i = 0; i < k; i++) {
-        decimal += binary[i] * pow(2, i);
-    }
-
-    // convert decimal to hexadecimal
-    k = 0;
-    while (decimal != 0) {
-        int rem = decimal % 16;
-        if (rem < 10) {
-            hexa[k] = rem + 48;
-        } else {
-            hexa[k] = rem + 55;
-        }
-        k++;
-        decimal /= 16;
-    }
-
-    printf("decimal = %d\n", decimal);
-    // reverse the hexadecimal number
-    printf("hexadecimal number: ");
-    for (i = k - 1; i >= 0; i--) {
-        printf("%c", hexa[i]);
-    }
-    printf("\n");
-
-
-    printf("binary number: ");
-    for (int i = 0; i < k; i--) {
-        printf("%d", binary[i]);
-    }
-
-    return (0);
+    // if the function returns 0, the conversion was unsuccessful
+    return 0;
 }
+
+// function to convert binary to hex, returns the size of the converted array
+int binaryToHexadecimal(int binary[], int size, char hexadecimal[]) {
+    // initialize variables, and a counter
+    int decimal, i, j;
+    // counter for the hexadecimal array will start at 0
+    j = 0;
+    // as long as the counter is less than the size of the array, the loop will continue
+    for (i = 0; i < size; i += 4) {
+        // initialize decimal to 0
+        decimal = 0;
+        // convert the binary to decimal
+        decimal += binary[i] * 8 + binary[i + 1] * 4 + binary[i + 2] * 2 + binary[i + 3];
+        // if the decimal is less than 10, add the decimal to the hexadecimal array
+        hexadecimal[j++] = decimalToHex(decimal);
+    }
+}
+
+// function to convert hex to binary, returns the size of the converted array
+int hexadecimalToBinary(char hexadecimal[], int size, int binary[]) {
+    // initialize variables, and a counter
+    int decimal, i, j;
+    // counter for the binary array will start at 0
+    j = 0;
+    // as long as the counter is less than the size of the array, the loop will continue
+    for (i = 0; i < size; i++) {
+        // initialize decimal to 0
+        decimal = hexToDecimal(hexadecimal[i]);
+        // convert the decimal to binary
+        decimalToBinary(decimal, binary + j, 4);
+        // increment the counter by 4
+        j += 4;
+    }
+}
+
 

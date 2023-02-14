@@ -16,8 +16,7 @@
     Task 3. implement ser_read() function in eecs388_lib.c.
  */
 
-int main()
-{
+int main() {
     char c;
     int led_gpio = GREEN_LED; 
 
@@ -27,8 +26,7 @@ int main()
     
     ser_setup();
     
-    while(1)
-    {
+    while(1) {
         ser_printline("\ntype 'r' or 'g' or 'b': "); 
         c = ser_read();        
         gpio_write(led_gpio, OFF);

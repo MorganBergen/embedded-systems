@@ -19,7 +19,7 @@
 
 ## brief
 
-the following readme will explicate a deeper understanding of the hardware platform HiFive1, including its CPU, architecture, memory map, external gpio pin map, and other relevant information.  the following src will have an added implementation of the `ser_read()` function, whcih reads data form the terminal via the UART connection.  note that we will only be using the `UART 0` universal asynchronous synchronous transmitters 
+the following readme will explicate a deeper understanding of the hardware platform HiFive1, including its CPU, architecture, memory map, external gpio pin map, and other relevant information.  the following src will have an added implementation of the `ser_read()` function, which reads data form the terminal via the UART connection.  note that we will only be using the `UART 0` universal asynchronous synchronous transmitters 
 
 ## directory structure
 
@@ -46,6 +46,34 @@ the following readme will explicate a deeper understanding of the hardware platf
 
 7 directories, 11 files
 ```
+
+## setup project
+
+add screenshot of vs code
+
+## hardware platform 
+
+containing board specification, in section 3.3 "usb to jtag and serial ports" find the J-link OB connectivity figure.  the platform uses a specialized chip (Segger J-Link OB) to provide two serial connections via USB.  For this project we will use `UART0`, which is connect to the main CPU (SiFive FE310-G002 CPU) of the platform.  in order to use the `UART0` you need to program the CPU.  for that you need to view the datasheet of the CPU.
+
+0.  hifive rev b components (01-figure.pdf)
+
+1.  usb to JTAG and Serial Ports
+
+the hifive1 reb b is populated with a segger j-link ob module which bridges USB to JTAG and two serial ports used for the `FE310-G002` console, `FE310-G002` JTAG, and `ESP32-SOLO-1` configuration.
+
+-  **JTAG** used for the `FE310-G002` debug
+-  **Serial 0** used for the `FE310-F002` console
+-  **Serial 1** used for the Expressif Systems `ESP32-SOLO-1`
+
+2.  J-Link OB connectivity (02-figure.pdf)
+
+figure 02 shows the connectivity between the SiFive FE310-G002 SoC, J-Link OB, and Wireless Connectivity on HiFive1 Rev B
+
+3.  `FE310-G002` overview (03-figure.pdf)
+
+this figure shows the overall top-level block diagram of the `FE310-G002`.  the block diagram shows what hardware blocks are integrated in the CPU along with other useful information such as data ram size (16KB DTIM), which is the maximum amount of memory you can use within your program.  this sounds very small, but it's actually big enough to complete this program.  note that there are **2 `UART` blocks**, (`UART0` and `UART1`) of which we will use the `UART0` for this lab.
+
+4.  `FE310-G002 Memory Map (04-figure.pdf)
 
 
 ## notes

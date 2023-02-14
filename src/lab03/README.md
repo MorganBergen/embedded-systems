@@ -1,12 +1,27 @@
 # universal asynchronous receiver/transmission (uart)
 
-**brief**
+**contents**
 
-- the following readme will explicate a deeper understanding of the hardware platform HiFive1, including its CPU, architecture, memory map, external gpio pin map, and other relevant information.
+1.  [brief](#brief)
+2.  [directory structure](#directory-structure)
+3.  [setup project](#setup-project)
+4.  [hardware platform](#hardware-platform)
+5.  [uart read/write functions](#uart-readwrite-functions)
+6.  [eecs388_lib.c](#eecs388_libc)
+7.  [eecs388_lib.h](#eecs388_libh)
+8.  [eecs388_uart.c](#eecs388_uartc)
+9.  [`void ser_setup()`](#void-ser_setup)
+10. [`void ser_write()`](#void-ser_write)
+11. [`ser_printline()`](#ser_printline)
+12. [implement `ser_read()`](#implement-ser_read)
+13. [appendix](#appendix)
+14. [notes](#notes)
 
-- the following src will have an added implementation of the `ser_read()` function, whcih reads data form the terminal via the UART connection.
+## brief
 
-`UART 0` universal asynchronous synchronous transmitters 
+the following readme will explicate a deeper understanding of the hardware platform HiFive1, including its CPU, architecture, memory map, external gpio pin map, and other relevant information.  the following src will have an added implementation of the `ser_read()` function, whcih reads data form the terminal via the UART connection.  note that we will only be using the `UART 0` universal asynchronous synchronous transmitters 
+
+## directory structure
 
 ```
 ❯ tree

@@ -1,5 +1,7 @@
 # embedded-systems
 
+<img src="https://user-images.githubusercontent.com/65584733/218813206-2c4f7197-709a-457a-bd9f-ab290cd05909.JPG" width="300" align="right">
+
 **contents**
 
 1.  [Introduction to Embedded Systems](./course/01-introduction-to-embedded-systems.md)
@@ -8,8 +10,6 @@
 4.  [lab03](./src/lab03/README.md)
 
 ### embedded systems c / c++
-
-<img src="https://user-images.githubusercontent.com/65584733/218813206-2c4f7197-709a-457a-bd9f-ab290cd05909.JPG" width="300" align="right">
 
 **about**
 

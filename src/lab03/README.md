@@ -1,4 +1,12 @@
-# lab03
+# universal asynchronous receiver/transmission (uart)
+
+**brief**
+
+- the following readme will explicate a deeper understanding of the hardware platform HiFive1, including its CPU, architecture, memory map, external gpio pin map, and other relevant information.
+
+- the following src will have an added implementation of the `ser_read()` function, whcih reads data form the terminal via the UART connection.
+
+`UART 0` universal asynchronous synchronous transmitters 
 
 ```
 ❯ tree

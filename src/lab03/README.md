@@ -48,6 +48,8 @@ the following readme will explicate a deeper understanding of the hardware platf
 ```
 
 
+## notes
+
 ```
 // UART)_CTRL_ADDR
 // base address where the uart is mapped

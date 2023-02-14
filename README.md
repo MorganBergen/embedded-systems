@@ -9,7 +9,7 @@
 
 ### embedded systems c / c++
 
-![Uploading hifive-ic-3.JPG…]()
+<img src="https://user-images.githubusercontent.com/65584733/218813206-2c4f7197-709a-457a-bd9f-ab290cd05909.JPG" width="300" align="right">
 
 **about**
 

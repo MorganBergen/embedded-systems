@@ -9,6 +9,8 @@
 
 ### embedded systems c / c++
 
+![Uploading hifive-ic-3.JPG…]()
+
 **about**
 
 The purpose of this repository is to illustrate material pertaining to the course embedded systems.  An embedded system is an intelligent system with special-purpose computation capabilities, (e.g. smart appliance, cars, medical devices, etc.)  The material will cover the hardware and software architecture of embedded systems, as how to program a microprocessor to interact with the physical world through sensors and actuators.

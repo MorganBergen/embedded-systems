@@ -89,10 +89,52 @@ in order to program the `UART0` block, you first need to know where the hardware
 |`0x14`  | `ip` | UART interrupt pending |
 |`0x18`  | `div` | Baud rate divisor register |
 
+## uart read/write functions
+
+```c
+#ifndef EECS388_LIB_H
+#define EECS388_LIB_H
+
+/* generic definitions */
+
+#define ON          1
+#define OFF         0
+#define INPUT       0   
+#define OUTPUT      1
+
+/* hifive1 platform related definitions */
+
+#define RED_LED     22
+#define BLUE_LED    21
+#define GREEN_LED   19
+
+/* memory map */
+
+#define GPIO_CTRL_ADDR      0x10012000  // gpio controller base address
+#define GPIO_INPUT_VAL      0x00        // input value
+#define GPIO_INPUT_EN       0x04        // input enable
+#define GPIO_OUTPUT_EN      0x08        // output enable
+#define GPIO_OUTPUT_VAL     0x0C        // output_val
+#define GPIO_OUPUT_XOR      0x40        // output XOR (invert)
+
+#define CLINT_CTRL_ADDR     0x02000000  // clint controller base address
+#define CLINT_MTIME         0xbff8      // timer register
+
+#define UART0_CTRL_ADDR     0x10013000  // uart0 controller base address
+#define UART_TXDATA         0x00        // txfifo register
+#define UART_RXDATA         0x04        // rxfifo register
+#define UART_TXCTRL         0x08        // tx control register
+#define UART_RXCTRL         0x0C        // rx control register
+#define UART_IE             0x10        // interrupt enable register
+#define UART_IP             0x14        // interrupt pending register
+#define UART_DIV            0x18        // uart baud rate divisor
+
+
+```
+
 
 
 ## notes
-
 ```
 // UART)_CTRL_ADDR
 // base address where the uart is mapped

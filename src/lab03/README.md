@@ -122,11 +122,36 @@ int main() {
     
     // general purpose input, output is used to set the direction of the pin to either input or output
     gpio_mode(RED_LED, OUTPUT);
+    gpio_mode(GREEN_LED, OUTPUT);
+    gpio_mode(BLUE_LED, OUTPUT);
+    
+    ser_setup();
+    
+    while(1) {
+        ser_printline("\ntype 'r' or 'g' or 'b': "); 
+        c = ser_read();        
+        gpio_write(led_gpio, OFF);
 
+        // Echo/write back the character to UART
+        ser_write(c);  
+        
+        switch (c) {
+            case 'r':
+                led_gpio = RED_LED;
+                break;
+            case 'g':
+                led_gpio = GREEN_LED; 
+                break;
+            case 'b':
+                led_gpio = BLUE_LED; 
+                break;
+            default:
+                ser_printline("ERROR");
+                break;
+        }
+        gpio_write(led_gpio, ON);
+    }
 }
-
-
-
 ```
 
 1.  `gpio_mode(RED_LED, OUTPUT)`
@@ -173,24 +198,7 @@ void gpio_mode(int gpio, int mode) {
 }
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## `eecs388_lib.h`
-## `eecs388_lib.c`
-## `void ser_setup()`
-## `void ser_write()`
-## `ser_printline()`
 
 ```c
 #ifndef EECS388_LIB_H
@@ -242,9 +250,180 @@ void ser_printline(char *str);
 char ser_read()
 
 #endif // __EECS388_LIB_H__
-
 ```
 
+## `eecs388_lib.c`
+
+```c
+#include <stdint.h>
+#include "eecs388_lib.h"
+
+void gpio_mode(int gpio, int mode) {
+  uint32_t val;
+  
+  if (mode == OUTPUT) {
+    val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN);
+    val |= (1<<gpio);
+    *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN) = val;
+
+    if (gpio == RED_LED || gpio == GREEN_LED || gpio == BLUE_LED) {
+      // active high
+      val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR);
+      val |= (1<<gpio);
+      *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR) = val;
+    }
+  } else if (mode == INPUT) {
+    val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
+    val |= (1<<gpio);
+    *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN) = val;
+  }
+  return;
+}
+
+void gpio_write(int gpio, int state) {
+  uint32_t val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_VAL);
+  if (state == ON) 
+    val |= (1<<gpio);
+  else
+    val &= (~(1<<gpio));    
+  *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_VAL) = val;
+  return;
+}
+
+inline uint64_t get_cycles(void) {
+  return *(volatile uint64_t *)(CLINT_CTRL_ADDR + CLINT_MTIME);
+}
+
+void delay(int msec) {
+  uint64_t tend; 
+  tend = get_cycles() + msec * 32768 / 1000;
+  while (get_cycles() < tend) {}; 
+}
+
+void ser_printline(char *str) {
+  int i;
+  for (i = 0;; i++) {
+    if (str[i] == '\0') {
+      ser_write('\n');
+      break;
+    }
+    ser_write(str[i]);
+  }
+}
+
+void ser_setup() {
+  /* initialize UART0 TX/RX */
+  *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXCTRL) |= 0x1;
+  *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXCTRL) |= 0x1;
+}
+
+void ser_write(char c) {
+  uint32_t regval;
+  do {
+    regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA);
+  } while (regval & 0x80000000);
+  *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA) = c;
+}
+
+char ser_read() {
+
+    uint32_t regval;
+    do {
+        regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXDATA);
+    } while (regval & 0x80000000);
+    return (char)regval;
+
+}
+```
+
+## `void ser_setup()` explanation
+
+```c
+void ser_setup() {
+    *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXCTRL) |= 0x1;
+    *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXCTRL) |= 0x1;
+}
+```
+
+1.  **components of the code explained**
+
+- `UART0_CTRL_ADDR` is the base address of the UART0 controller
+- `UART_TXCTRL` is the offset of the TX control register
+- `UART_RXCTRL` is the offset of the RX control register
+- `volatile` is a keyword that tells the compiler not to optimize the code (i.e. not to cache the value of the variable in a register)
+- `uint32_t` is a 32-bit unsigned integer
+- `*` is the dereference operator that returns the value of the variable at the address
+- `|=` is the bitwise OR assignment operator that performs a bitwise OR operation and assigns the result to the left operand.
+- `0x1` is a hexadecimal number that represents the value 1
+
+2.  **line by line of what the code does**
+
+- `*(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXCTRL) |= 0x1;` sets the TX enable bit in the TX control register, and assigns the TXFIFO register to 1
+- `*(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXCTRL) |= 0x1;` sets the RX enable bit in the RX control register, and assigns the RXFIFO register to 1
+
+## `void ser_write()`
+
+```c
+void ser_write(char c) {
+    
+    uint32_t regval;
+
+    do {
+    
+        regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXCTRL) |= 0x1;
+    
+    } while (regval & 0x80000000);
+
+    *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA) = c;
+}
+```
+
+1.  **components of the code explained**
+
+-  `uint32_t` is a 32-bit unsigned integer
+-  `regval` is a variable that stores the value of the TX control register which starts at 0 and is updated in the while loop
+-  `*(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA)` is the address of the TX data register which is used to write data to the TX FIFO
+-  `(regval & 0x80000000)` is a bitwise AND operation that checks if the TXFIFO is full or not
+- `*(volatle uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA) = c;` is the address of the TX data register which is used to write data to the TX FIFO
+
+
+## `ser_printline()`
+
+```c
+void ser_printline(char * str) {
+
+    int i;
+
+    for (i = 0; ; i++) {
+
+        if (str[i] == '\0') {
+
+            ser_write('\n');
+            
+            break;
+        } 
+
+        ser_write(str[i]);
+    }
+}
+```
+
+## implement `ser_read()`
+
+```c
+char ser_read() {
+
+    unit32_t regval;
+
+    do {
+        
+        regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXDATA);
+
+    } while (regval & 0x80000000);
+
+    return (regval & 0xFF);
+}
+```
 
 ## notes
 ```c

@@ -90,7 +90,7 @@ void ser_write(char c) {
  * read a chacter from the uart 0
  * 
  * Input: None
- * Return: read byte
+ * Return: read byt
  */
 char ser_read() {
   /*
@@ -103,6 +103,41 @@ char ser_read() {
     
     HINT: take a look at the implementation of ser_write()
   */
-  return 'r';  // this return statement needs to be changed.
+
+  uint32_t regval;
+
+  do {
+    regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXDATA);
+  } while (regval & 0x80000000)
+
+  return (regval & 0xFF);
+ 
+
+  // return 'r';  this return statement needs to be changed.
                // It's only a placeholder for the actual return value, which is the character that was read
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

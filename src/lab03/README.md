@@ -129,6 +129,9 @@ in order to program the `UART0` block, you first need to know where the hardware
 #define UART_IP             0x14        // interrupt pending register
 #define UART_DIV            0x18        // uart baud rate divisor
 
+/* eecs388 library api */
+void gpio_mode(int gpio, int mode);
+void gpio_write(int gpio, int state);
 
 ```
 

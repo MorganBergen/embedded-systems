@@ -73,7 +73,22 @@ figure 02 shows the connectivity between the SiFive FE310-G002 SoC, J-Link OB, a
 
 this figure shows the overall top-level block diagram of the `FE310-G002`.  the block diagram shows what hardware blocks are integrated in the CPU along with other useful information such as data ram size (16KB DTIM), which is the maximum amount of memory you can use within your program.  this sounds very small, but it's actually big enough to complete this program.  note that there are **2 `UART` blocks**, (`UART0` and `UART1`) of which we will use the `UART0` for this lab.
 
-4.  `FE310-G002 Memory Map (04-figure.pdf)
+4.  `FE310-G002 Memory Map (04-figure.pdf)`
+
+in order to program the `UART0` block, you first need to know where the hardware block is mapped in the cpu address space.  the table shows memory mapping information of the hardware blocks of the cpu.  the `UART0` block is mapped between `010013000` - `0x10013FF` (4KB space).  next we need to know how to actually program the `UART` hardware block, which is described in chapter 18 of the manual.  the following table shows the control registers that you need to know to interact with the `UART` hardware block.  
+
+5.  **Register offsets within `UART` memory map**
+
+| Offset | Name | Description |
+|:-------|:-----|:------------|
+|`0x00`  | `txdata` | Transmit data register |
+|`0x04`  | `rxdata` | Receive data register |
+|`0x08`  | `txctrl` | Transmit control register |
+|`0x0C`  | `rxctrl` | Receive control register |
+|`0x10`  | `ie` | UART interrupt enable |
+|`0x14`  | `ip` | UART interrupt pending |
+|`0x18`  | `div` | Baud rate divisor register |
+
 
 
 ## notes

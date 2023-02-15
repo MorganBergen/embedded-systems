@@ -4,10 +4,9 @@
 
 **contents**
 
-1.  [Introduction to Embedded Systems](./course/01-introduction-to-embedded-systems.md)
-2.  [lab01](./src/lab01/README.md)
-3.  [lab02](./src/lab02/README.md)
-4.  [lab03](./src/lab03/README.md)
+1.  [programs in c](./src/lab01/README.md)
+2.  [hardware and development environment](./src/lab02/README.md)
+3.  [universal asynchronous receiver/transmission (uart)](./src/lab03/README.md)
 
 ### embedded systems c / c++
 

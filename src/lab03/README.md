@@ -7,8 +7,9 @@
 3.  [setup project](#setup-project)
 4.  [hardware platform](#hardware-platform)
 5.  [uart read/write functions](#uart-readwrite-functions)
-6.  [eecs388_uart.c](#eecs388_uartc)
-7.  [eecs388_lib.h](#eecs388_libh)
+6.  [eecs388_lib.h](#eecs388_libh)
+7.  [eecs388_uart.c](#eecs388_uartc)
+-   [memory map](#memory-map)
 8.  [eecs388_lib.c](#eecs388_libc)
 9.  [`void ser_setup()`](#void-ser_setup)
 10. [`void ser_write()`](#void-ser_write)
@@ -104,99 +105,6 @@ in order to program the `UART0` block, you first need to know where the hardware
 1 directory, 3 files
 ```
 
-the `UART`initialization and transmit related code as part of the `eecs388` library has been provided, so let's look at the provided code to better understand how to program the `UART` block, by first looking at the `eecs388_uart.c` module.
-
-## `eecs388_uart.c`
-
-the source code contains three main modules, that is `eecs388_art.c`, `eecs388_lib.h`, and `eecs_lib.c` and the program is supposed to read a character from the `UART0` serial port and turn on/off the appropriate LED based on the read character, where r -> red led, g -> green led, b -> blue led.  the first task outlined in the `eecs388_uart.c` file states to read the memory map ch 4 and UART in ch 18.  then there after review the provided the `eecs_lib.c` module.
-
-
-```c
-#include <stdint.h>
-#include "eecs_388_lib.h"
-
-int main() {
-
-    char c;
-    int led_gpio = GREEN_LED;
-    
-    // general purpose input, output is used to set the direction of the pin to either input or output
-    gpio_mode(RED_LED, OUTPUT);
-    gpio_mode(GREEN_LED, OUTPUT);
-    gpio_mode(BLUE_LED, OUTPUT);
-    
-    ser_setup();
-    
-    while(1) {
-        ser_printline("\ntype 'r' or 'g' or 'b': "); 
-        c = ser_read();        
-        gpio_write(led_gpio, OFF);
-
-        // Echo/write back the character to UART
-        ser_write(c);  
-        
-        switch (c) {
-            case 'r':
-                led_gpio = RED_LED;
-                break;
-            case 'g':
-                led_gpio = GREEN_LED; 
-                break;
-            case 'b':
-                led_gpio = BLUE_LED; 
-                break;
-            default:
-                ser_printline("ERROR");
-                break;
-        }
-        gpio_write(led_gpio, ON);
-    }
-}
-```
-
-1.  `gpio_mode(RED_LED, OUTPUT)`
-
-the general purpose input output (gpio) mode is a method used to set the direction of the pin to either input or output mode.  if the parameter for mode is `int OUTPUT = 1` then the pin will be set in the direction to output, where it is prepared to send signals to the microcontroller, if the `int gpio = RED_LED = 22` is set in the parameter of the function then the pin that we are choosing to direct will be defined, so in this case it will be set to direction for output to allow signals to be sent on pin number 22.
-
-when this method is invoked the compiler is redirected to the `eecs388_lib.c` module. the `gpio_mode` is defined as follows,
-
-```c
-#include <stdint.h>
-#include "eecs388_lib.h"
-
-void gpio_mode(int gpio, int mode) {
-    
-    uint32_t val;
-
-    if (mode == OUTPUT) {
-
-        val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN);
-
-        val |= (1 << gpio);
-
-        *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN) = val;
-
-        if (gpio == RED_LED || gpio == GREEN_LED || gpio == BLUE_LED) {
-            
-            val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR);
-
-            val |= (1 << gpio);
-
-            *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR) = val;
-
-    } else if (mode == INPUT) {
-
-        val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
-
-        val |= (1 << gpio);
-
-        *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN) = val;
-
-    } return;
-
-    // more code below
-}
-```
 
 ## `eecs388_lib.h`
 
@@ -251,6 +159,137 @@ char ser_read()
 
 #endif // __EECS388_LIB_H__
 ```
+
+### memory map
+
+the memory map is a list of the memory addresses that are used to control the gpio pins.
+
+1.  **gpio controller base address  `#define GPIO_CTRL_ADDR     0x10012000`**
+
+- `GPIO_CTRL_ADDR`  is a variable name that represents the base address of the gpio (general purpose input/output controller in the memory mapped i/o mmio address space.  gpio is a memory adddress that _refers_ to the location of the gpio control register on the device.  an address space is a range of memory addresses that can be accessed by the processor, while a register is a small amount of very fast memory that is located in the chip itself.  a register is often used to hold a small piece of data or a memory address that is being actively used by the processor.
+
+- `#define GPIO_CTRL_ADDR     0x10012000`  is a preprocessor macro that defines the base address of the registers that control the gpio pins on the platform that the code is written for in this case it's for the FE310-G002 chip.  
+
+- a preprocessor macro is a fragment of code that is given a name and cal be called multiple times throughout the code.  when the preprocessor encounters the macro name in the code, it replaces the name with the corresponding fragment of code, which is called the macro expansion. we use `#define` for this exact purpose.   
+
+2.  **input value  `#define GPIO_INPUT_VAL     0x00`**
+
+3.  **input enable  `define GPIO_INPUT_EN      0x04`**
+
+4.  **output enable `#define GPIO_OUTPUT_EN     0x08`**
+
+`GPIO_OUTPUT_EN` is a macro that represents the offset in bytes of the register controlling the output enable for the gpio pins.  a register is a small amount of fast memory available on a microcontroller that can be used to hold data or configuration settings, in this case it's used to access the register that controls the output enable for the gpio pins.  so by setting the appropriate bits in this register, the code can configure the gpio pins to be the output pins.
+
+in otherwords `GPIO_OUTPUT_EN` is a constant variable that represents the memory offset of a reister in the gpio controller's memory mapped i/o (MMIO) region.  a register is a special type of memory location within a computer's processor or peripheral devices, which is designed to hold data that can be read or written by a computer program.   in this case the gpio controller has several registers that can be used to configure its behavior and access the values of its input and output pins.  so by writing to or reading from hese registers, the program can interact with the gpio controller to control the state of the pins connected to it, which can be used to control external devices or to read input signals from sensors or switches.
+
+## `eecs388_uart.c`
+
+the `UART`initialization and transmit related code as part of the `eecs388` library has been provided, so let's look at the provided code to better understand how to program the `UART` block, by first looking at the `eecs388_uart.c` module.
+
+the source code contains three main modules, that is `eecs388_art.c`, `eecs388_lib.h`, and `eecs_lib.c` and the program is supposed to read a character from the `UART0` serial port and turn on/off the appropriate LED based on the read character, where r -> red led, g -> green led, b -> blue led.  the first task outlined in the `eecs388_uart.c` file states to read the memory map ch 4 and UART in ch 18.  then there after review the provided the `eecs_lib.c` module.
+
+```c
+#include <stdint.h>
+#include "eecs_388_lib.h"
+
+int main() {
+
+    char c;
+    int led_gpio = GREEN_LED;
+    
+    // general purpose input output is used to set the direction of the pin to either input or output
+    gpio_mode(RED_LED, OUTPUT);
+    gpio_mode(GREEN_LED, OUTPUT);
+    gpio_mode(BLUE_LED, OUTPUT);
+
+    ser_setup();
+    
+    while(1) {
+        ser_printline("\ntype 'r' or 'g' or 'b': "); 
+        c = ser_read();        
+        gpio_write(led_gpio, OFF);
+
+        // Echo/write back the character to UART
+        ser_write(c);  
+        
+        switch (c) {
+            case 'r':
+                led_gpio = RED_LED;
+                break;
+            case 'g':
+                led_gpio = GREEN_LED; 
+                break;
+            case 'b':
+                led_gpio = BLUE_LED; 
+                break;
+            default:
+                ser_printline("ERROR");
+                break;
+        }
+        gpio_write(led_gpio, ON);
+    }
+}
+```
+
+### 1.  `void gpio_mode(RED_LED, OUTPUT)`
+
+the general purpose input output (gpio) mode is a method used to set the direction of the pin to either input or output mode.  if the parameter for mode is `int OUTPUT = 1` then the pin will be set in the direction to output, where it is prepared to send signals to the microcontroller, if the `int gpio = RED_LED = 22` is set in the parameter of the function then the pin that we are choosing to direct will be defined, so in this case it will be set to direction for output to allow signals to be sent on pin number 22.
+
+when this method is invoked the compiler is redirected to the `eecs388_lib.c` module. the `gpio_mode` is defined as follows,
+
+```c
+// ...
+void gpio_mode(int gpio, int mode) {
+    
+    unint32_t val;
+
+    if (mode == OUTPUT) {
+
+        val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN);
+
+        val |= (1 << gpio);
+
+        *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN) = val;
+
+        if (gpio == RED_LED || gpio == GREEN_LED || gpio == BLUE_LED) {
+            
+            val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR);
+
+            val |= (1 << gpio);
+
+            *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR) = val;
+
+    } else if (mode == INPUT) {
+
+        val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
+
+        val |= (1 << gpio);
+
+        *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN) = val;
+
+    } return;
+}
+// ...
+```
+
+1.  `uint32_t val;`  
+
+- is a 32-bit unsigned integer, meaning it can store a binary number with 32 digits, where each digit can either be a a `0` or a `1` the unsigned part means that it only represents non-negative numbers, and the 32-bit part means that it in total it will use 32 bits of memory to store the value.
+
+- therefore the range of values that `val` can store is between 
+
+- in hexadecimal `0x00000000` - `0xFFFFFFFF`
+
+- in binary `00000000 00000000 00000000 00000000` - `11111111 11111111 11111111 11111111`
+
+- in denary `0` - `4,294,967,295`
+
+- the purpose of `val` is to store and manipulate the value of the 32-bit register that controls the behavior of the gpio pin.  `val` will be used to modify the value of the `GPIO_OUTPUT_EN` register this is the output register.  `GPIO_OUTPUT_EN` is a macro that represents the offset in bytes of the register controlling the output enable for the gpio pins.  a register is a small amount of fast memory available on a microcontroller that can be used to hold data or configuration settings, in this case it's used to access the register that controls the output enable for the gpio pins.  so by setting the appropriate bits in this register, the code can configure the gpio pins to be the output pins.
+
+2.  `if (mode == OUTPUT) {`
+
+- this `if` statement is used to check whether the mode parameter is set to `OUTPUT` meaning that the specified pin from the previous parameter get's set to a direction where it is prepared to send signals to the microcontroller.  
+
 
 ## `eecs388_lib.c`
 

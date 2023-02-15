@@ -9,7 +9,7 @@
 5.  [uart read/write functions](#uart-readwrite-functions)
 6.  [eecs388_lib.h](#eecs388_libh)
 7.  [eecs388_uart.c](#eecs388_uartc)
--   [memory map](#memory-map)
+-   [memory map preprocessor directives](#memory-map-preprocessor-directives)
 8.  [eecs388_lib.c](#eecs388_libc)
 9.  [`void ser_setup()`](#void-ser_setup)
 10. [`void ser_write()`](#void-ser_write)
@@ -160,7 +160,7 @@ char ser_read()
 #endif // __EECS388_LIB_H__
 ```
 
-### memory map
+### memory mapping preprocessor directives
 
 the memory map is a list of the memory addresses that are used to control the gpio pins.
 
@@ -172,15 +172,37 @@ the memory map is a list of the memory addresses that are used to control the gp
 
 - a preprocessor macro is a fragment of code that is given a name and cal be called multiple times throughout the code.  when the preprocessor encounters the macro name in the code, it replaces the name with the corresponding fragment of code, which is called the macro expansion. we use `#define` for this exact purpose.   
 
+-  in general `#define GPIO_CTRL_ADDR       0x10012000` is a preprocessor directive that defines the `GPIO_CTRL_ADDR` macro to the memory address of the control register in the memory-mapped i/o address space of the FE310-G002 CPU.  so when the program reads from or writes to this memory address, it is accessing the GPIO control register and modifying its contents.  the gpio control register itself contains many individual fields, each of which controls different aspects of the gpio's, such as whether they are configured as inputs or outputs which you will see are defined below, to see whether the state of the upp-up and pull-down resister etc.  
+
 2.  **input value  `#define GPIO_INPUT_VAL     0x00`**
 
-3.  **input enable  `define GPIO_INPUT_EN      0x04`**
+-  this preprocessor macro defies the offset value for the register that reads the input value of the gpio pins.
+
+-  in the case of computer architecture an offset value is a value added to a base address to compute the address of a memory location.  when a program wants to access a specific piece of data in memory, it needs to calculate the actual memory address where the data is located.  to do this, the program uses the base address of the memory region where the data is stored, and then adds an offset to that base address to get the final memory address.  the offset is usually expressed as a number of bytes, and is used to specify the distance between the starting memory address and the desired memory location.
+
+-  so in this case the gpio pins' input value can be read from register located at the offset value from the base address of the gpio controller, which is defined as `GPIO_CTR_ADDR`.  the base address serves as a reference point for the offset values used to access other registers in the gpio controller.  the input value register has an offset value of `0x00`, which is added to the base address to obtain the memory address of the register.
+
+3.  **input enable  `#define GPIO_INPUT_EN      0x04`**
+
+-  `GPIO_INPUT_EN` is a preprocessor macro that defines the offset value of the `GPIO` input enable register within the `GPIO` controller's address space.  when you add this value to the base address of the `GPIO` controller variable name `GPIO_CTRL_ADDR` which is `0x10012000`, you get the memory address of the `GPIO` input enable register. 
+
+- this register is used to **enable** `GPIO` pins as inputs, meaning that the `GPIO` pins as inputs, meaning that the `GPIO` controller will monitor the voltage level of those pins and allow the device to read those values.  in other wordsm the `GPIO` input enable register controls which pins are configued as inputs.
 
 4.  **output enable `#define GPIO_OUTPUT_EN     0x08`**
 
-`GPIO_OUTPUT_EN` is a macro that represents the offset in bytes of the register controlling the output enable for the gpio pins.  a register is a small amount of fast memory available on a microcontroller that can be used to hold data or configuration settings, in this case it's used to access the register that controls the output enable for the gpio pins.  so by setting the appropriate bits in this register, the code can configure the gpio pins to be the output pins.
+- `GPIO_OUTPUT_EN` is a macro that represents the offset in bytes of the register controlling the output enable for the gpio pins.  as previously stated a register is a small amount of fast memory available on a microcontroller that can be used to hold data or configuration settings, in this case it's used to access the register that controls the output enable for the gpio pins.  so by setting the appropriate bits in this register, the code can configure the gpio pins to be the output pins.
 
-in otherwords `GPIO_OUTPUT_EN` is a constant variable that represents the memory offset of a reister in the gpio controller's memory mapped i/o (MMIO) region.  a register is a special type of memory location within a computer's processor or peripheral devices, which is designed to hold data that can be read or written by a computer program.   in this case the gpio controller has several registers that can be used to configure its behavior and access the values of its input and output pins.  so by writing to or reading from hese registers, the program can interact with the gpio controller to control the state of the pins connected to it, which can be used to control external devices or to read input signals from sensors or switches.
+-  the output enable register is located at the address that is equal to the base address of the gpio controller @ address `0x10012000` plus the offset value of `0x08`
+
+-  so in the code shown in the `eecs388_lib.c` implementation file within the `gpio_mode` function definition `*(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT)` is a pointer to the output enable register and by setting the bit corresponding to the gpio pin we want to use as an output, we enable it.
+
+5.  **output value `#define GPIO_OUTPUT_VAL     0x0C`**
+
+-  `GPIO_OUTPUT_VAL` is a macro that defines an offset value for the output value register within the gpio controller.  it specifies the location of the register that holds the current output state of each pin on the gpio controller.
+
+-  the output value register can be used to set the state of a specific pin by writing to it directly.  as you will see later on in the implementation file `eecs388_uart.c` this will specifically be utilized, in the `gpio_write` function.  where the output value register is accessed by adding the `GPIO_CTRL_ADDR` base address to the `GPIO_OUTPUT_VAL` offset to get the address of the register.  the desired output value is then written to this register by setting or clearing the appropriate bit.  for example to set a pin to high, a `1` is written to the corresponding bit in the output value register.
+
+6.  
 
 ## `eecs388_uart.c`
 

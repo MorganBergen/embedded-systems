@@ -7,9 +7,9 @@
 3.  [setup project](#setup-project)
 4.  [hardware platform](#hardware-platform)
 5.  [uart read/write functions](#uart-readwrite-functions)
-6.  [eecs388_lib.c](#eecs388_libc)
+6.  [eecs388_uart.c](#eecs388_uartc)
 7.  [eecs388_lib.h](#eecs388_libh)
-8.  [eecs388_uart.c](#eecs388_uartc)
+8.  [eecs388_lib.c](#eecs388_libc)
 9.  [`void ser_setup()`](#void-ser_setup)
 10. [`void ser_write()`](#void-ser_write)
 11. [`ser_printline()`](#ser_printline)
@@ -94,6 +94,104 @@ in order to program the `UART0` block, you first need to know where the hardware
 
 ## uart read/write functions
 
+```zsh
+❯ tree
+.
+├── eecs388_lib.c
+├── eecs388_lib.h
+└── eecs388_uart.c
+
+1 directory, 3 files
+```
+
+the `UART`initialization and transmit related code as part of the `eecs388` library has been provided, so let's look at the provided code to better understand how to program the `UART` block, by first looking at the `eecs388_uart.c` module.
+
+## `eecs388_uart.c`
+
+the source code contains three main modules, that is `eecs388_art.c`, `eecs388_lib.h`, and `eecs_lib.c` and the program is supposed to read a character from the `UART0` serial port and turn on/off the appropriate LED based on the read character, where r -> red led, g -> green led, b -> blue led.  the first task outlined in the `eecs388_uart.c` file states to read the memory map ch 4 and UART in ch 18.  then there after review the provided the `eecs_lib.c` module.
+
+
+```c
+#include <stdint.h>
+#include "eecs_388_lib.h"
+
+int main() {
+
+    char c;
+    int led_gpio = GREEN_LED;
+    
+    // general purpose input, output is used to set the direction of the pin to either input or output
+    gpio_mode(RED_LED, OUTPUT);
+
+}
+
+
+
+```
+
+1.  `gpio_mode(RED_LED, OUTPUT)`
+
+the general purpose input output (gpio) mode is a method used to set the direction of the pin to either input or output mode.  if the parameter for mode is `int OUTPUT = 1` then the pin will be set in the direction to output, where it is prepared to send signals to the microcontroller, if the `int gpio = RED_LED = 22` is set in the parameter of the function then the pin that we are choosing to direct will be defined, so in this case it will be set to direction for output to allow signals to be sent on pin number 22.
+
+when this method is invoked the compiler is redirected to the `eecs388_lib.c` module. the `gpio_mode` is defined as follows,
+
+```c
+#include <stdint.h>
+#include "eecs388_lib.h"
+
+void gpio_mode(int gpio, int mode) {
+    
+    uint32_t val;
+
+    if (mode == OUTPUT) {
+
+        val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN);
+
+        val |= (1 << gpio);
+
+        *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN) = val;
+
+        if (gpio == RED_LED || gpio == GREEN_LED || gpio == BLUE_LED) {
+            
+            val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR);
+
+            val |= (1 << gpio);
+
+            *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR) = val;
+
+    } else if (mode == INPUT) {
+
+        val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
+
+        val |= (1 << gpio);
+
+        *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN) = val;
+
+    } return;
+
+    // more code below
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `eecs388_lib.h`
+## `eecs388_lib.c`
+## `void ser_setup()`
+## `void ser_write()`
+## `ser_printline()`
+
 ```c
 #ifndef EECS388_LIB_H
 #define EECS388_LIB_H
@@ -136,12 +234,20 @@ in order to program the `UART0` block, you first need to know where the hardware
 void gpio_mode(int gpio, int mode);
 void gpio_write(int gpio, int state);
 
-```
+void delay(int msec);
 
+void ser_setup();
+void ser_write(char c);
+void ser_printline(char *str);
+char ser_read()
+
+#endif // __EECS388_LIB_H__
+
+```
 
 
 ## notes
-```
+```c
 // UART)_CTRL_ADDR
 // base address where the uart is mapped
 // UART_TXDATA

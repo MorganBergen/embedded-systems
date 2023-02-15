@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "eecs388_lib.h"
 
+
 void gpio_mode(int gpio, int mode) {
   uint32_t val;
   
@@ -93,41 +94,28 @@ void ser_write(char c) {
  * Return: read byt
  */
 char ser_read() {
-  /*
-    The provided implementation doesn't actually read from the UART 0.
-    The character 'r' is hardcoded to return and not the actual return value. 
-
-    What you need to do to implement this function are:
-    1) wait until UART0 RX FIFO is not empty
-    2) read the data from the FIFO and return the read (one) byte.
-    
-    HINT: take a look at the implementation of ser_write()
-  */
-
+ // regval is a place holder for the actual return value of the function
   uint32_t regval;
 
+  // busy-wait if rx FIFO is empty
   do {
+    // the regval is the value of the RXDATA register
+    // by using the * operator, we are dereferencing the address of the RXDATA register
+    // by using the volatile keyword, we are telling the compiler that the value of the register may change at any time
+    // by using the uint32_t keyword, we are telling the compiler that the value of the register is a 32 bit unsigned integer
+    // the next * operator is dereferencing the address of the register
+    // so (uint32_t *) is casting the value of the register to a 32 bit unsigned integer
+    // we know that the he UART0 controller is a used to access the UART0 control register to set the baud rate, enable the transmitter and receiver, and send and receive data over the serial port.
+
+    // and the serial port is the communication interface between two devices, where data is transmitted one bit at a time in sequential order over a serial communication channel.the serial port is a feature of the sifive FE310 - G002 and it provides a way to communicate with the board from another device, such as this personal computer via a usb micro - b cable.
+   // so we add UART0_CTRL_ADDR to the address of the RXDATA register to get the address of the RXDATA register in the UART0 controller 
     regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXDATA);
-  } while (regval & 0x80000000)
+  } while (regval & 0x80000000);
 
+  // then we return the value of the RXDATA register  
   return (regval & 0xFF);
- 
 
-  // return 'r';  this return statement needs to be changed.
-               // It's only a placeholder for the actual return value, which is the character that was read
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

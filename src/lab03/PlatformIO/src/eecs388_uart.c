@@ -1,5 +1,4 @@
 #include <stdint.h>
-
 #include "eecs388_lib.h"
 
 /*

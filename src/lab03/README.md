@@ -7,10 +7,10 @@
 3.  [setup project](#setup-project)
 4.  [hardware platform](#hardware-platform)
 5.  [uart read/write functions](#uart-readwrite-functions)
-6.  [eecs388_lib.h](#eecs388_libh)
-7.  [eecs388_uart.c](#eecs388_uartc)
+6.  [`eecs388_lib.h`](#eecs388_libh)
+7.  [`eecs388_uart.c`](#eecs388_uartc)
 -   [memory map preprocessor directives](#memory-map-preprocessor-directives)
-8.  [eecs388_lib.c](#eecs388_libc)
+8.  [`eecs388_lib.c`](#eecs388_libc)
 9.  [`void ser_setup()`](#void-ser_setup)
 10. [`void ser_write()`](#void-ser_write)
 11. [`ser_printline()`](#ser_printline)
@@ -164,7 +164,7 @@ char ser_read()
 
 the memory map is a list of the memory addresses that are used to control the gpio pins.
 
-1.  **gpio controller base address  `#define GPIO_CTRL_ADDR     0x10012000`**
+1.  `#define GPIO_CTRL_ADDR     0x10012000` gpio controller base address  
 
 - `GPIO_CTRL_ADDR`  is a variable name that represents the base address of the gpio (general purpose input/output controller in the memory mapped i/o mmio address space.  gpio is a memory adddress that _refers_ to the location of the gpio control register on the device.  an address space is a range of memory addresses that can be accessed by the processor, while a register is a small amount of very fast memory that is located in the chip itself.  a register is often used to hold a small piece of data or a memory address that is being actively used by the processor.
 
@@ -174,7 +174,7 @@ the memory map is a list of the memory addresses that are used to control the gp
 
 -  in general `#define GPIO_CTRL_ADDR       0x10012000` is a preprocessor directive that defines the `GPIO_CTRL_ADDR` macro to the memory address of the control register in the memory-mapped i/o address space of the FE310-G002 CPU.  so when the program reads from or writes to this memory address, it is accessing the GPIO control register and modifying its contents.  the gpio control register itself contains many individual fields, each of which controls different aspects of the gpio's, such as whether they are configured as inputs or outputs which you will see are defined below, to see whether the state of the upp-up and pull-down resister etc.  
 
-2.  **input value  `#define GPIO_INPUT_VAL     0x00`**
+2.  `#define GPIO_INPUT_VAL     0x00` input value  
 
 -  this preprocessor macro defies the offset value for the register that reads the input value of the gpio pins.
 
@@ -182,13 +182,13 @@ the memory map is a list of the memory addresses that are used to control the gp
 
 -  so in this case the gpio pins' input value can be read from register located at the offset value from the base address of the gpio controller, which is defined as `GPIO_CTR_ADDR`.  the base address serves as a reference point for the offset values used to access other registers in the gpio controller.  the input value register has an offset value of `0x00`, which is added to the base address to obtain the memory address of the register.
 
-3.  **input enable  `#define GPIO_INPUT_EN      0x04`**
+3.  `#define GPIO_INPUT_EN      0x04` input enable  
 
 -  `GPIO_INPUT_EN` is a preprocessor macro that defines the offset value of the `GPIO` input enable register within the `GPIO` controller's address space.  when you add this value to the base address of the `GPIO` controller variable name `GPIO_CTRL_ADDR` which is `0x10012000`, you get the memory address of the `GPIO` input enable register. 
 
 - this register is used to **enable** `GPIO` pins as inputs, meaning that the `GPIO` pins as inputs, meaning that the `GPIO` controller will monitor the voltage level of those pins and allow the device to read those values.  in other wordsm the `GPIO` input enable register controls which pins are configued as inputs.
 
-4.  **output enable `#define GPIO_OUTPUT_EN     0x08`**
+4.  `#define GPIO_OUTPUT_EN     0x08` output enable 
 
 - `GPIO_OUTPUT_EN` is a macro that represents the offset in bytes of the register controlling the output enable for the gpio pins.  as previously stated a register is a small amount of fast memory available on a microcontroller that can be used to hold data or configuration settings, in this case it's used to access the register that controls the output enable for the gpio pins.  so by setting the appropriate bits in this register, the code can configure the gpio pins to be the output pins.
 
@@ -196,13 +196,60 @@ the memory map is a list of the memory addresses that are used to control the gp
 
 -  so in the code shown in the `eecs388_lib.c` implementation file within the `gpio_mode` function definition `*(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT)` is a pointer to the output enable register and by setting the bit corresponding to the gpio pin we want to use as an output, we enable it.
 
-5.  **output value `#define GPIO_OUTPUT_VAL     0x0C`**
+5.  `#define GPIO_OUTPUT_VAL     0x0C` output value 
 
 -  `GPIO_OUTPUT_VAL` is a macro that defines an offset value for the output value register within the gpio controller.  it specifies the location of the register that holds the current output state of each pin on the gpio controller.
 
 -  the output value register can be used to set the state of a specific pin by writing to it directly.  as you will see later on in the implementation file `eecs388_uart.c` this will specifically be utilized, in the `gpio_write` function.  where the output value register is accessed by adding the `GPIO_CTRL_ADDR` base address to the `GPIO_OUTPUT_VAL` offset to get the address of the register.  the desired output value is then written to this register by setting or clearing the appropriate bit.  for example to set a pin to high, a `1` is written to the corresponding bit in the output value register.
 
-6.  
+6. `#define GPIO_OUTPUT_XOR     0x40` output xor (invert) 
+
+-  `GPIO_OUTPUT_XOR` is a macro that defines the values `0x40` to the identifier `GPIO_OUTPUT_XOR`.  this identifier is typically used to set or toggle a specific output bit on the gpio port, where the bit is XORed with its current value.
+
+-  for example, if a particular bit of the output port is currently set to `0` and `GPIO_OUTPUT_XOR` is applied to that bit, the bit will be toggled to 1.  if the bit was already 1, applying `GPIO_OUTPUT_XOR` would toggle it back to `0`.
+
+-  `XOR` refresher the short for exclusive or is a logical operation that outputs true only when inputs differ.  it is a binary operator, meaning that it operatoes on two binary digits or bits.  specifically, the xor operator returns a `1` or `true` if and only if one of the two bits being compared is `1`.  if both bits are the same (`1 xor 1` or `0 xor 0`) the `xor` operator returns a `0` or `false`.
+
+7.  `#define CLINT_CTRL_ADDR    0x02000000` core local interruptor controller address 
+
+-  `CLINT_CTRL_ADDR` has a constant base address value of `0x02000000`, it's a preprocessing directive.  this address in the memory map on the cpu specifically refers to the address of the core local interruptor controller. also known as CLINT controller.
+
+- the clint is a hardware block that provides timer and interrupt services to the FE310-G002 processor on the board.  the clint has a number of register that can be accessed at specific memory locations, and the address `0x02000000` is the base address for those registers.
+
+8.  `#define CLINT_MTIME        0xbff8` clint m time register
+
+-  the `CLINT_MTIME` is a maco that defines the memory-mapped address of the machine time register in the CLINT (core local interrupter) block of the hardware platform.
+
+- the machine timer register is a 64-bit register that stores the current time of the hardware platform, and is incremented by a timer at a fixed frequency.  it is typically used in embedded systems to perform tasks that require timing or time-stamping, such as scheduling tasks, measuring the duration of an event, or generating precise delays.
+
+9.  `#define UART0_CTRL_ADDR        0x10013000` uart0 controller base address
+
+-  `UART0_CTRL_ADDR` defines a symbolic name `UART0_CTRL_ADDR` that represents the memory address of the `UART0` controller on the board.  the `UART0` controller is responsible for managing the serial communication between the microcontroller and a device connected to its serial port.
+
+-  the `UART0` controller is a used to access the `UART0` control register to set the baud rate, enable the transmitter and receiver, and send and receive data over the serial port.
+
+- the serial port is the communication interface between two devices, where data is transmitted one bit at a time in sequential order over a serial communication channel.  the serial port is a feature of the sifive FE310-G002 and it provides a way to communicate with the board from another device, such as this personal computer via a usb micro-b cable.
+
+-  a baud rate is the number signal or symbol changes (events) per second in a communication channel.  it represents the rate at which data is transmitted over a communication channel and is typically measured in bits per second.  (bps)
+
+10.  `#define UART_TXDATA         0x00`  txfifo register
+
+-  `UART_TXDATA` represent the offset of the transmit FIFO (first in first out) queue data register within the `UART0` control address space.  when a byte is sent via the `UART0` interface, the byte is written into this register and added to the transmit FIFO.  
+
+-  the transmit FIFO is a buffer within the `UART0` interface that holds bytes waiting to be sent over the serial connection.
+
+-  a buffer is a region of memory used to temporarily hold data while it is being move from one place to another.  it is an intermediate place for data to be stored and retrieved, buffers are commonly used to speed up input/output operations and to balance the different rates at which data is received and processed by a computer.
+
+-  so when the program needs to send data through the `UART0` interface, it writes the data to the `UART_TXDATA` register offset by adding it to `UART0_CTRL_ADDR`
+
+11.  `#define UART_RXDATA         0x04` rxfifo register
+
+-  `UART_RXDATA` is a macro that defines the offset of the receive FIFO data register within the `UART0` control address space.  when a byte is received via the `UART0` interface, the byte is read from this register and removed from the receive FIFO.
+
+`#define UART_TXDATA         0x00        // TXFIFO register`
+`#define UART_RXDATA         0x04        // RXFIFO register`
+`#define UART_TXCTRL         0x08        // TX control register`
+`#define UART_RXCTRL         0x0C        // RX control register`
 
 ## `eecs388_uart.c`
 

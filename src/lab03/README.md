@@ -49,7 +49,7 @@ the following readme will explicate a deeper understanding of the hardware platf
 
 ## setup project
 
-add screenshot of vs code
+<img width="1040" alt="output" src="https://user-images.githubusercontent.com/65584733/218893074-31ece0a0-5fd2-415f-a533-c58641096080.png">
 
 ## hardware platform 
 

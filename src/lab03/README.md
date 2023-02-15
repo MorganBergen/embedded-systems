@@ -89,6 +89,9 @@ in order to program the `UART0` block, you first need to know where the hardware
 |`0x14`  | `ip` | UART interrupt pending |
 |`0x18`  | `div` | Baud rate divisor register |
 
+![03-figure](https://user-images.githubusercontent.com/65584733/218916924-2757d34f-21ab-413f-8198-330ec7c9c8d0.png)
+
+
 ## uart read/write functions
 
 ```c

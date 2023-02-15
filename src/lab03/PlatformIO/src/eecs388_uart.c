@@ -36,7 +36,7 @@ int main() {
         
         switch (c) {
             case 'r':
-                led_gpio = RED_LED; 
+                led_gpio = RED_LED;
                 break;
             case 'g':
                 led_gpio = GREEN_LED; 

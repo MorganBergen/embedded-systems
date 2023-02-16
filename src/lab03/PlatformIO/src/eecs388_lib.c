@@ -1,7 +1,22 @@
+/*
+ * @file        eecs388_lib.c
+ * @date        Wed Feb 15 18:39:51 CST 2023
+ * @author      morgan bergen
+ * @brief       EECS 388 Lab 03 Thursday 9 AM
+ */
+
 #include <stdint.h>
 #include "eecs388_lib.h"
 
 
+/*
+ * @pre     None
+ * @param   gpio_port: GPIO port to be initialized
+ *          mode: GPIO mode to be set
+ * @post    GPIO port is initialized
+ * @return  None
+ * @brief   sets GPIO_OUTPUT_EN or GPIO_INPUT_EN register
+ */
 void gpio_mode(int gpio, int mode) {
   uint32_t val;
   
@@ -24,6 +39,14 @@ void gpio_mode(int gpio, int mode) {
   return;
 }
 
+/* 
+ * @pre     None
+ * @param   gpio_port: GPIO port to be initialized
+ *          value: value to be set
+ * @post    GPIO port is initialized
+ * @return  None
+ * @brief   sets GPIO_OUTPUT_VAL register
+ */
 void gpio_write(int gpio, int state) {
   uint32_t val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_VAL);
   if (state == ON) 
@@ -34,6 +57,11 @@ void gpio_write(int gpio, int state) {
   return;
 }
 
+/*
+ * @pre     None
+ * @param   void
+ * @post    None
+ */
 inline uint64_t get_cycles(void) {
   return *(volatile uint64_t *)(CLINT_CTRL_ADDR + CLINT_MTIME);
 }
@@ -45,11 +73,9 @@ void delay(int msec) {
 }
 
 /**
- * write a chacter string to the UART 0
- * 
- * Input:
- *  @str    string point
- * Return: None
+ * @pre     None
+ * @param   str pointer
+ * @return  None
  */
 void ser_printline(char *str) {
   int i;
@@ -62,28 +88,29 @@ void ser_printline(char *str) {
   }
 }
 
-// section 9 of read me
+/*
+ * @pre     None
+ * @param   None
+ * @return  None
+ * @brief   initializes UART TX/RX
+ */
 void ser_setup() {
-  /* initialize UART0 TX/RX */
   *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXCTRL) |= 0x1;
   *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_RXCTRL) |= 0x1;
 }
 
-/** section 10 of read me
- * write a chacter to the UART 0 FIFO
- * 
- * Input: 
- *  @c    character to send via the UART
- * Return: None
+/*
+ * @pre     None
+ * @param   character to send via the UART
+ * @return  None
+ * @brief   writes a character to the UART 0 FIFO, while busy-waiting if TX FIFO is full
  */
 void ser_write(char c) {
   uint32_t regval;
-  /* busy-wait if tx FIFO is full  */
   do {
     regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA);
   } while (regval & 0x80000000);
 
-  /* write the character */
   *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA) = c;
 }
 
@@ -116,16 +143,4 @@ char ser_read() {
   return (regval & 0xFF);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

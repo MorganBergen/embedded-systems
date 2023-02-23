@@ -100,6 +100,9 @@ you will re-use the `ser_read()` function you implemented in Lab 2 or use the pr
 
 the first task is to interact with the tfmini sensor via `UART0` to parse the sensor's distance data.  note that the distance data is stored in `Byte3` and `Byte4` of the sensor's data frame.  so you need to do a bit of data manipulation to ontain the distance value.  note that the variable `dist` should contain the obtained distance value.  you will then print the value to the console (i.e. serial monitor), by using either `printf`, `sprintf`, and `ser_printline` combination.
 
+reference [eecs388_tfmini.c](./PlatformIO/src/eecs388_tfmini.c)
+reference [bitwise operations](https://www.programiz.com/c-programming/bitwise-operators)
+
 ```c
 #include <stdio.h>
 #include <stdint.h>

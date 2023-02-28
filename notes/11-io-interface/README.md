@@ -8,7 +8,11 @@
 4.  [memory map of sifivefe310](#memory-map-of-sifive310)
 5.  [general purpose i/o gpio](#general-purpose-io-gpio)
 6.  [example turn on an led](#example-turn-on-an-led)
-...
+
+[volatile in c](#volatile-in-c)
+[transfer types](#transfer-types)
+[synchronous vs. asynchronous](#synchronous-vs-asynchronous)
+
 
 ## volatile in c
 

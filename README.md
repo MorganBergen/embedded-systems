@@ -33,3 +33,14 @@ The purpose of this repository is to illustrate material pertaining to the cours
 - scheduling and real-time scheduling concepts in linux
 
 - cpu and memory architecture, how instructions get executed in the hardware and the micro-architecture of a basic RISC-V, single-cycle processor.
+
+
+**midterm exam**
+
+-  printed materail, open book, open notes
+-  cannot bring computer
+-  must have calculator
+-  0 - 11
+-  homework questions, analgous to hw01, hw02, and hw03
+-  encoding instructions, math questions, multiple choice
+-  20 - 25 questions

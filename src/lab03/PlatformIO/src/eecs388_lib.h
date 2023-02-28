@@ -17,8 +17,13 @@
 #define GREEN_LED           19 // gpio 19
 
 /******************************************************************************
- *   memory map
+ *      memory map
+ *      offset  offset from the base address
+ *      to configure gpio as output, write 1 in this address (base + offset)
+ *  
+ *   
  *******************************************************************************/
+// macro variable defined   offset
 #define GPIO_CTRL_ADDR      0x10012000  // GPIO controller base address
 #define GPIO_INPUT_VAL      0x00        // input val
 #define GPIO_INPUT_EN       0x04        // input enable

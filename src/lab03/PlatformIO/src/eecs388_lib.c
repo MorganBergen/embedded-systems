@@ -18,24 +18,38 @@
  * @brief   sets GPIO_OUTPUT_EN or GPIO_INPUT_EN register
  */
 void gpio_mode(int gpio, int mode) {
+
   uint32_t val;
   
   if (mode == OUTPUT) {
+    // first read from output_val to val
+    // then we change 1 bit to val
+    // then we update output_val with val
+    // base + offset denotes to address of `output_en` in memory map
     val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN);
+
     val |= (1<<gpio);
+
     *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_EN) = val;
 
     if (gpio == RED_LED || gpio == GREEN_LED || gpio == BLUE_LED) {
-      // active high
+      
+        // active high
       val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR);
+
       val |= (1<<gpio);
+
       *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR) = val;
     }
   } else if (mode == INPUT) {
-    val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
+    
+      val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
+
     val |= (1<<gpio);
+
     *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN) = val;
   }
+ 
   return;
 }
 
@@ -108,6 +122,12 @@ void ser_setup() {
 void ser_write(char c) {
   uint32_t regval;
   do {
+    /*
+     *  volatile:  the compiler will not optimize away the read
+     *  uint32_t:  the read is 32 bits wide
+     *  *:         the read is from the address stored in the pointer
+     *  (UART0_CTRL_ADDR + UART_TXDATA):  the address of the UART TX FIFO register
+     */
     regval = *(volatile uint32_t *)(UART0_CTRL_ADDR + UART_TXDATA);
   } while (regval & 0x80000000);
 

@@ -14,7 +14,24 @@ the reason for the limit of 32 registers may be found in the second of our four 
 
 design principle 2:  smaller the faster
 
-a vary large number of registers may increase the clock cycle time simply because it takes electronic signals longer when they must travel farther.
+a vary large number of registers may increase the clock cycle time simply because it takes electronic signals longer when they must travel farther.  so the effective use of registers is key to program performace.  although we could simply write instructions using numbers for registers, from 0 to 31, the mips convention is to use two-character names following a dollar sign to represent a register.  
+
+-  `$s0, $s1` for registers that correspond to variables in c
+-  `$t0, $1` for temporary registers needed to compile the program into mips instructions
+
+### compiling a c assignment using registers
+
+it's the compilers job to associate program variables with registers, take for instance the assignment statement:
+
+```cpp
+f = (g + h) - (i +j);
+```
+
+```mips
+add $t0, $s1, $s2   # register $t0 contains g + h, equivalent to t0 = g + h
+add $t1, $s3, $s4   # register $t1 contains i + j, 
+sub $s0, $t0, $t1
+```
 
 
 # supporting procedures in computer hardware
@@ -30,8 +47,7 @@ you can think of a procedure like a spy who leaves with a secret plan, acquires 
 5.  place the result value in a place where the calling program can access it
 6.  return control to the point of origin, since a procedure can be called from several points in the program
 
-registers are the fastest place to hold data in a computer, so we want to use them as much as possible 
-
+registers are the fastest place to hold data in a computer, so we want to use them as much as possible.  
 
 
 ## definitions

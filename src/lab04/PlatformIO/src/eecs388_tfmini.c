@@ -14,7 +14,6 @@ int main() {
 
     // ser_printline() can be used to print to the serial monitor
     ser_printline("Setup completed.\n"); 
-    printf("Setup completed.\n");
 
     // LIDAR distance data is 16 bits.
     uint16_t dist = 0;
@@ -76,24 +75,31 @@ dist = dist_2 << 8 | dist_1
             // | is the bitwise OR operator which combines the two 8 bits
             // what we want to combine is the remainder, so the low 8 bits of the distance data
             dist = (dist_2 << 8) | dist_1;
-        /* 
-            Task 2.2: 
-            - turn on the red LED if the distance measured is less than 50 cm. 
-            - otherwise turn on the green LED 
-            
-            - print the measured value to the console (i.e. the serial monitor) 
-            - You can use printf() or ser_printline() or ser_write()
-            
-            - Helpful guide for printing with printf()
-            - https://en.cppreference.com/w/cpp/io/c/fprintf
-        */
+
+            printf("distance: %d cm \n", dist);
+
+            for (int i = 0; i < 5; i++) {
+                ser_read();
+            }
+
+            /*
+                Task 2.2:
+                - turn on the red LED if the distance measured is less than 50 cm.
+                - otherwise turn on the green LED
+
+                - print the measured value to the console (i.e. the serial monitor)
+                - You can use printf() or ser_printline() or ser_write()
+
+                - Helpful guide for printing with printf()
+                - https://en.cppreference.com/w/cpp/io/c/fprintf
+            */
             if (dist < 50) {
+                gpio_write(GREEN_LED, OFF);
                 gpio_write(RED_LED, ON);
-                printf("Distance: %d cm:", dist);
             } else {
                 gpio_write(GREEN_LED, ON);
-                printf("Distance: %d cm:", dist);
+                gpio_write(RED_LED, OFF);
             }
         }
     }
-}    
+}

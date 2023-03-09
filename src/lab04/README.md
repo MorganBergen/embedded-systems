@@ -111,11 +111,35 @@ reference [bitwise operations](https://www.programiz.com/c-programming/bitwise-o
 
 int main()
 
+    gpio_mode(RED_LED, OUTPUT);
+    gpio_mode(GREEN_LED, OUTPUT);
+    ser_setup();
 
+    ser_printline("setup complete\n");
 
+    uint16_t dist = 0;
 
+    while (1) {
+
+        if ('Y' == ser_read() && 'Y' == ser_read()) {
+
+            uint8_t dist_1 = ser_read();
+            uint8_t dist_2 = ser_read();
+
+            dist = (dist_2 << 8) | dist_1;
+
+            if (dist < 50) {
+                gpio_write(RED_LED, ON);
+                printf("distance: %d cm\n", dist);
+            } else {
+                gpio_write(GREEN_LED, ON);
+                printf("distance: %d cm\n", dist);
+            }
+
+        }
+
+    }
 ```
-
 
 
 ## control led based on distance

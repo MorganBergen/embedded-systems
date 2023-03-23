@@ -4,6 +4,7 @@
 
 1.  [intro](#intro)
 2.  [tensorflow framework](#tensorflow framework)
+3.  [notes](#notes)
 
 ## intro
 
@@ -34,12 +35,32 @@ the dnn model in `model.py` is designed to take a camera image as input and prod
 
 if you wanted to make a self driving car using a camera system instead of ladar.  they rely mostly on the camera and they run a suite of complex and sophisticated machine learning algoritms.
 
+## tensorflow framework
 
 ## notes
-
-`python dnn py`
-
 
 -  is the inference going down
 -  what was the difference when going from 1 to 2 or 3 to 4
 -  are there diminishing returns
+
+
+```
+completed inference, total frames: 1000, average fps: 19.3 Hz
+count: 999
+mean: 26.2203142569
+max: 58.3357810974
+99.999pct: 58.1613650417
+99.99pct: 56.5916205406
+99.9pct: 40.8941755295
+99pct: 37.037358284
+min: 24.570941925
+median: 24.8510837555
+stdev: 3.47506702438
+```
+
+|
+
+
+what is the time difference between 1 to 2 and 2 to 3 and 3 to 4
+
+

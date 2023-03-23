@@ -368,7 +368,7 @@ stdev: 1.17142166239
 | conv3    | 15.9211158752 | 29.3099880219 |
 | conv4    | 14.2619609833 | 25.6199836731 |
 
-## conclusion from
+## conclusion
 
 based on emperical analysis of running all cores we can observe that as the number of cpu cores in increased from 1 to 4, the mean and max times of inferencing operations for each convolutional layer decreases.  this indicates that increasing the number of cpu cores results in faster execution of the inferencing operations.  
 

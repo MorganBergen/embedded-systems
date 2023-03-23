@@ -1,6 +1,7 @@
 # real time dnn inferencing
 
-<img src="./assets/car.png" align="right">
+<!--- <img src="./assets/car.png" width="300px" align="right"> -->
+<img src="./assets/nn.png" style="padding: 50px;" width="600px" align="right">
 
 **contents**
 -  [intro](#intro)

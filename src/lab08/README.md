@@ -1,7 +1,7 @@
 # real time dnn inferencing
 
 <!--- <img src="./assets/car.png" width="300px" align="right"> -->
-<img src="./assets/nn.png" style="padding: 50px;" width="600px" align="right">
+<img src="./assets/nn.png" style="padding: 60px;" width="700px" align="right">
 
 **contents**
 -  [intro](#intro)
@@ -55,8 +55,7 @@ tensorflow a very popular deep learning framework developed by google is requisi
 
 
 run the DNN inference code for CPU core numbers 1, 2 , 3 and 4.
-Your task is to measure the performance---especially mean, which represents the average, and max, which represents the worst-case---of the inferencing operations while varying the number of CPU cores being used from 1 to 4.
-Prepare a table showing the CPU core numbers, the mean and max time of inferencing operations (shown below) and write a comment on the result. (for example: how the inferencing operation time is varying with the CPU core, you can show your result using a graph as well.)
+Your task is to measure the performance---especially mean, which represents the average, and max, which represents the worst-case---of the inferencing operations while varying the number of CPU cores being used from 1 to 4.  Prepare a table showing the CPU core numbers, the mean and max time of inferencing operations (shown below) and write a comment on the result. (for example: how the inferencing operation time is varying with the CPU core, you can show your result using a graph as well.)
 
 what is the time difference between 1 to 2 and 2 to 3 and 3 to 4
 
@@ -152,19 +151,17 @@ median: 21.3599205017
 stdev: 1.17142166239
 ```
 
-| cpu core | meantime | maxtime |
-|:--------:|:--------:|:-------:|
+| cpu core |   meantime    |     maxtime   |
+|:--------:|:-------------:|:-------------:|
+| conv1    | 24.570941925  | 58.3357810974 |
+| conv2    | 19.3250179291 | 36.1139774323 |
+| conv3    | 15.9211158752 | 29.3099880219 |
+| conv4    | 14.2619609833 | 25.6199836731 |
 
+## conclusion
 
+based on emperical analysis of running all cores we can observe that as the number of cpu cores in increased from 1 to 4, the mean and max times of inferencing operations for each convolutional layer decreases.  this indicates that increasing the number of cpu cores results in faster execution of the inferencing operations.  
 
+the difference between the time for using 1 and 2 cores is higher for the conv1 layer compared to the other layers, indicating that this layer is more computationally intensive than the others.  
 
-
-
-
-
-
-
-
-
-
-
+the time difference between 2 to 3 cores and 3 to 4 cores are relatively small for all layers, suggesting that further increasing the number of cores may not provide a significant improvement in performance.  however, this can only be confirmed by testing with a higher `N` of cores.

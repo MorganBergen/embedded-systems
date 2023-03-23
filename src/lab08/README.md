@@ -1,5 +1,9 @@
 # real time dnn inferencing
 
+morgan bergen
+
+march 23 2023
+
 <img src="./assets/nn.png" style="padding: 60px;" width="500px" align="right">
 
 ### contents
@@ -14,6 +18,7 @@
     3. [conv3 convolutional layer completed inference](#conv3-convolutional-layer-completed-inference)
     4. [conv4 convolutional layer completed inference](#conv4-convolutional-layer-completed-inference)
 4. [conclusion](#conclusion)
+5. [references](#references)
 
 ## intro
 
@@ -375,3 +380,15 @@ based on emperical analysis of running all cores we can observe that as the numb
 the difference between the time for using 1 and 2 cores is higher for the conv1 layer compared to the other layers, indicating that this layer is more computationally intensive than the others.  
 
 the time difference between 2 to 3 cores and 3 to 4 cores are relatively small for all layers, suggesting that further increasing the number of cores may not provide a significant improvement in performance.  however, this can only be confirmed by testing with a higher `N` of cores.
+
+<img src="./assets/graph.png" width="600">
+
+## references
+
+* [tensorflow](https://www.tensorflow.org/)
+* [keras](https://keras.io/)
+* [opencv](https://opencv.org/)
+* [python](https://www.python.org/)
+* [numpy](https://numpy.org/)
+* [matplotlib](https://matplotlib.org/)
+* [pandas](https://pandas.pydata.org/)

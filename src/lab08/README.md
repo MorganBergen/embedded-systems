@@ -1,6 +1,6 @@
 # real time dnn inferencing
 
-<img src="./assets/nn.png" style="padding: 60px;" width="700px" align="right">
+<img src="./assets/nn.png" style="padding: 60px;" width="500px" align="right">
 
 ### contents
 

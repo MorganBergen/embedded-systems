@@ -2,7 +2,7 @@
 
 **contents**
 -  [intro](#intro)
--  [tensorflow framework](#tensorflow framework)
+-  [tensorflow framework](#tensorflow-framework)
 -  [notes](#notes)
 -  [final task](#final-task) 
 
@@ -10,7 +10,7 @@
 
 DeepPicar is a "low-cost" deep nural network based autonomous car. this a mirrored small scale and stupid replication of a real self-driving car called [DAVE-2 by NVIDIA](https://developer.nvidia.com/blog/deep-learning-self-driving-cars/).  the objective is to load a machine learning algorithm load a [deep neural network](https://en.wikipedia.org/wiki/Deep_learning#Deep_neural_networks) **dnn** model and perform inferencing operations on the [rasberry pi 4](https://www.raspberrypi.com/documentation/).  note that all references will be dervied from [deeppicar project](https://github.com/dctian/DeepPiCar).
 
-convolutional neural network CNN for short takes images front facing camera as input and produces car steering angles as output.  DeepPicar network architecture consists of - 9 layers - 27 million connections - 250k parameters.  it 
+convolutional neural network CNN for short takes images front facing camera as input and produces car steering angles as output.  DeepPicar network architecture consists of - **9 layers - 27 million connections - 250k parameters** and can self drive in real-time using web camera and raspberry pi 3 quad-core platform.  using deeppicar we analyze the pi's computing capabilities to support end to end deep learning based real-time control of autonomous vehicles and look at the embedded computing platforms using DeepPicar cnn-based real time control workflow.
 
 **directory tree**
 

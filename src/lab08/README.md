@@ -1,14 +1,19 @@
 # real time dnn inferencing
 
-<!--- <img src="./assets/car.png" width="300px" align="right"> -->
 <img src="./assets/nn.png" style="padding: 60px;" width="700px" align="right">
 
-**contents**
--  [intro](#intro)
--  [tensorflow framework](#tensorflow-framework)
--  [`dnn.py`](#dnn-py)
--  [notes](#notes)
--  [final task](#final-task) 
+### contents
+
+1. [intro](#intro)
+2. [tensorflow framework](#tensorflow-framework)
+    1. [`dnn.py`](#dnnpy)
+    2. [`model.py`](#modelpy)
+3. [final task](#final-task)
+    1. [conv1 convolutional layer completed inference](#conv1-convolutional-layer-completed-inference)
+    2. [conv2 convolutional layer completed inference](#conv2-convolutional-layer-completed-inference)
+    3. [conv3 convolutional layer completed inference](#conv3-convolutional-layer-completed-inference)
+    4. [conv4 convolutional layer completed inference](#conv4-convolutional-layer-completed-inference)
+4. [conclusion](#conclusion)
 
 ## intro
 
@@ -38,26 +43,231 @@ in the folder we already provided a pre-trained dnn model `model.py`, and `model
 ## tensorflow framework
 
 ### `dnn.py`
+
+tensorflow a very popular deep learning framework developed by google is requisit to run a dnn based application.  in order to run a neural network tensorflow uses sessions which holds individual models and run the operations necessary for the network's architecture.  in order to load our dnn model, we need to create a session and assign the model to that session.
+
 ```python
-from __future__ import division
-import tensorflow as tf
+# load the model
+sess = tf.InteractiveSession(config = config) 
+saver = tf.train.Saver()
+model_load_path = "model/model.ckpt"
+saver.restore(sess, model_load_path)
 ```
 
-tensorflow a very popular deep learning framework developed by google is requisit to run a dnn based application.  in order to run a neural network tensorflow uses sessions
+from there we can feed input data to the loaded model to perform [inferencing operations](https://www.intel.com/content/www/us/en/developer/videos/speed-scale-ai-inference-multiple-architectures.html) and get the control output.
 
-## notes
+```python
+#!/usr/bin/env python
+from __future__ import division
 
--  is the inference going down
--  what was the difference when going from 1 to 2 or 3 to 4
--  are there diminishing returns
+# Imports
+import tensorflow as tf
+model = __import__("model")
+import cv2
+import sys
+import os
+import time
+import math
+import numpy as np
+
+# Radian <-> Degree conversion functions
+def deg2rad(deg):
+        return deg * math.pi / 180.0
+def rad2deg(rad):
+        return 180.0 * rad / math.pi
+
+#Get and set the number of cores to be used by TensorFlow
+if(len(sys.argv) > 1):
+	NCPU = int(sys.argv[1])
+else:
+	NCPU = 1
+config = tf.ConfigProto(intra_op_parallelism_threads=NCPU, \
+                        inter_op_parallelism_threads=NCPU, \
+                        allow_soft_placement=True, \
+                        device_count = {'CPU': 1})
+
+#The max number of frames to be processed,
+#    and the number of frames already processed
+NFRAMES = 1000
+curFrame = 0
+
+#Periodic task options
+period = 50
+is_periodic = True
+
+# load the model
+sess = tf.InteractiveSession(config=config)
+saver = tf.train.Saver()
+model_load_path = "model/model.ckpt"
+saver.restore(sess, model_load_path)
+
+#Create lists for tracking operation timings
+cap_time_list = []
+prep_time_list = []
+pred_time_list = []
+tot_time_list = []
+
+print('---------- Processing video for epoch 1 ----------')
+
+#Open the video file
+vid_path = 'epoch-1.avi'
+assert os.path.isfile(vid_path)
+cap = cv2.VideoCapture(vid_path)
+
+#Process the video while recording the operation execution times
+print('performing inference...')
+time_start = time.time()
+first_frame = True
+while(1):
+	if curFrame < NFRAMES:
+		cam_start = time.time()
+
+		#Get the next video frame
+		ret, img = cap.read()
+		if not ret:
+			break
+
+		prep_start = time.time()
+
+		#Preprocess the input frame
+		img = cv2.resize(img, (200, 66))
+		img = img / 255.
+
+		pred_start = time.time()
+
+		#Feed the frame to the model and get the control output
+		rad = model.y.eval(feed_dict={model.x: [img]})[0][0]
+		deg = rad2deg(rad)
+		pred_end   = time.time()
+
+		#Calculate the timings for each step
+		cam_time  = (prep_start - cam_start)*1000
+		prep_time = (pred_start - prep_start)*1000
+		pred_time = (pred_end - pred_start)*1000
+		tot_time  = (pred_end - cam_start)*1000
+
+		print('pred: {:0.2f} deg. took: {:0.2f} ms | cam={:0.2f} prep={:0.2f} pred={:0.2f}'.format(deg, tot_time, cam_time, prep_time, pred_time))
+
+		#Don't include the timings for the first frame due to cache warmup
+		if first_frame:
+			first_frame = False
+		else:
+			tot_time_list.append(tot_time)
+			curFrame += 1
+
+		#Wait for next period
+		wait_time = (period - tot_time) / 1000
+		if is_periodic and wait_time > 0:
+			time.sleep(wait_time)
+	else:
+		break
+
+cap.release()
+
+#Calculate and output FPS/frequency
+fps = curFrame / (time.time() - time_start)
+print('completed inference, total frames: {}, average fps: {} Hz'.format(curFrame+1, round(fps, 1)))
+
+#Calculate and display statistics of the total inferencing times
+print("count: {}".format(len(tot_time_list)))
+print("mean: {}".format(np.mean(tot_time_list)))
+print("max: {}".format(np.max(tot_time_list)))
+print("99.999pct: {}".format(np.percentile(tot_time_list, 99.999)))
+print("99.99pct: {}".format(np.percentile(tot_time_list, 99.99)))
+print("99.9pct: {}".format(np.percentile(tot_time_list, 99.9)))
+print("99pct: {}".format(np.percentile(tot_time_list, 99)))
+print("min: {}".format(np.min(tot_time_list)))
+print("median: {}".format(np.median(tot_time_list)))
+print("stdev: {}".format(np.std(tot_time_list)))
+```
+
+### `model.py`
+
+```python
+#!/usr/bin/env python
+
+from __future__ import division
+
+import tensorflow as tf
+
+def weight_variable(name, shape):
+    return tf.get_variable(name, shape=shape, initializer=tf.contrib.layers.xavier_initializer())
+
+def bias_variable(shape):
+    initial = tf.constant(0.1, shape=shape)
+    return tf.Variable(initial)
+
+def conv2d(x, W, stride):
+    return tf.nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
+
+x = tf.placeholder(tf.float32, shape=[None, 66, 200, 3], name="input_x")
+y_ = tf.placeholder(tf.float32, shape=[None, 1])
+
+x_image = x
+
+# first convolutional layer
+W_conv1 = weight_variable("wc1", [5, 5, 3, 24])
+b_conv1 = bias_variable([24])
+
+h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1, 2) + b_conv1, name="relu1")
+
+# second convolutional layer
+W_conv2 = weight_variable("wc2", [5, 5, 24, 36])
+b_conv2 = bias_variable([36])
+
+h_conv2 = tf.nn.relu(conv2d(h_conv1, W_conv2, 2) + b_conv2, name="relu2")
+
+# third convolutional layer
+W_conv3 = weight_variable("wc3", [5, 5, 36, 48])
+b_conv3 = bias_variable([48])
+
+h_conv3 = tf.nn.relu(conv2d(h_conv2, W_conv3, 2) + b_conv3, name="relu3")
+
+# fourth convolutional layer
+W_conv4 = weight_variable("wc4", [3, 3, 48, 64])
+b_conv4 = bias_variable([64])
+
+h_conv4 = tf.nn.relu(conv2d(h_conv3, W_conv4, 1) + b_conv4, name="relu4")
+
+# fifth convolutional layer
+W_conv5 = weight_variable("wc5", [3, 3, 64, 64])
+b_conv5 = bias_variable([64])
+
+h_conv5 = tf.nn.relu(conv2d(h_conv4, W_conv5, 1) + b_conv5, name="relu5")
+h_conv5_flat = tf.reshape(h_conv5, [-1, 1152], name="reshape1")
+
+# fully connected layer 2
+W_fc2 = weight_variable("fc2", [1152, 100])
+b_fc2 = bias_variable([100])
+
+h_fc2 = tf.nn.relu(tf.matmul(h_conv5_flat, W_fc2, name="matmul1") + b_fc2, name="relu6")
+
+# fully connected layer 3
+W_fc3 = weight_variable("fc3", [100, 50])
+b_fc3 = bias_variable([50])
+
+h_fc3 = tf.nn.relu(tf.matmul(h_fc2, W_fc3, name="matmul2") + b_fc3, name="relu7")
+
+# fully connected layer 4
+W_fc4 = weight_variable("fc4", [50, 10])
+b_fc4 = bias_variable([10])
+
+h_fc4 = tf.nn.relu(tf.matmul(h_fc3, W_fc4, name="matmul3") + b_fc4, name="relu8")
+
+# output
+W_fc5 = weight_variable("fc5", [10, 1])
+b_fc5 = bias_variable([1])
+
+y = tf.multiply(tf.atan(tf.matmul(h_fc4, W_fc5, name="matmul4") + b_fc5), 2, name="atan1") 
+#scale the atan output
+```
+
 
 ## final task
-
 
 run the DNN inference code for CPU core numbers 1, 2 , 3 and 4.
 Your task is to measure the performance---especially mean, which represents the average, and max, which represents the worst-case---of the inferencing operations while varying the number of CPU cores being used from 1 to 4.  Prepare a table showing the CPU core numbers, the mean and max time of inferencing operations (shown below) and write a comment on the result. (for example: how the inferencing operation time is varying with the CPU core, you can show your result using a graph as well.)
 
-what is the time difference between 1 to 2 and 2 to 3 and 3 to 4
 
 ### conv1 convolutional layer completed inference
 
@@ -158,7 +368,7 @@ stdev: 1.17142166239
 | conv3    | 15.9211158752 | 29.3099880219 |
 | conv4    | 14.2619609833 | 25.6199836731 |
 
-## conclusion
+## conclusion from
 
 based on emperical analysis of running all cores we can observe that as the number of cpu cores in increased from 1 to 4, the mean and max times of inferencing operations for each convolutional layer decreases.  this indicates that increasing the number of cpu cores results in faster execution of the inferencing operations.  
 

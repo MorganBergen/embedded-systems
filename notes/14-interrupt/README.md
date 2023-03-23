@@ -21,8 +21,27 @@ we saw that interrupt was sent by adc to cpu when data conversion is done and di
 -  **polling**  the cpu checks the keybaord repeatedly if it wants to send data
 -  **interrupt** the io device interrupts when its ready to send data
 
-**polling**
-> I have to repeatedly check if the keyboard is sending a data
+-  **polling** [cpu] <- [keyboard]
+-  **example**  starting at the clock all night to do so that we can have breakfast at 7:00 am
+
+>  "I have to repeatedly check if the keyboard is sending a data..."
+
+-  **interrupt** [cpu] <- [keyboard]
+-  **example**  setting up an alarm for 7:00 am to interrupt the sleep
+
+>  "hey cpu a key has been struck.  the ascii code is in the input device register, please stop and read it now"
+
+## polling example with keyboard
+
+-  two io registers are needed to facilitate polling for an input device like keyboard
+    -  **status register** indicates a key struck
+    -  **data register** stores the input data from keyboard
+
+-  cpu regularly checks the status register
+-  if the specific the specific bit of the status register is set
+    -  cpu reads from the data register
+
+## polling
 
 ## interrupt
 
@@ -61,3 +80,9 @@ we saw that interrupt was sent by adc to cpu when data conversion is done and di
 ## vector interrupts
 
 ## 2 service the interrupt
+
+## 3 return from the interrupt
+
+## execution flow for interrupt driven io
+
+## references

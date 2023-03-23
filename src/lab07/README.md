@@ -8,7 +8,3 @@
 ## description
 
 in this rep you will setup an account on a raspberry 
-
-## setup your account in raspberry pi 5
-
-## notes

@@ -6,6 +6,7 @@
 **contents**
 -  [intro](#intro)
 -  [tensorflow framework](#tensorflow-framework)
+-  [`dnn.py`](#dnn-py)
 -  [notes](#notes)
 -  [final task](#final-task) 
 
@@ -35,6 +36,14 @@ convolutional neural network CNN for short takes images front facing camera as i
 in the folder we already provided a pre-trained dnn model `model.py`, and `model/`, a sample video file `epoch-1.avi`, and inferference code `dnn.py`. the dnn model in `model.py` is designed to take a camera image as input and produce a steering angle to stay in the lane as output.  the sample video file was originally created from the camera of an rc car driven by a human pilot.  this video will be used as input to the dnn model instead of using an actual camera.  a series of frames will be individually analyzed and then will make an inference on what behavior is to take next.  if you wanted to make a self driving car using a camera system instead of radar expenses ratio is present, system will rely mostly on the camera and they run a suite of complex and sophisticated machine learning algoritms for each convolutional layer.
 
 ## tensorflow framework
+
+### `dnn.py`
+```python
+from __future__ import division
+import tensorflow as tf
+```
+
+tensorflow a very popular deep learning framework developed by google is requisit to run a dnn based application.  in order to run a neural network tensorflow uses sessions
 
 ## notes
 

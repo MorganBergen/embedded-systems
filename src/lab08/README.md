@@ -1,10 +1,10 @@
 # real time dnn inferencing
 
+<img src="./assets/nn.png" style="padding: 60px;" width="500px" align="right">
+
 morgan bergen
 
 march 23 2023
-
-<img src="./assets/nn.png" style="padding: 60px;" width="500px" align="right">
 
 ### contents
 

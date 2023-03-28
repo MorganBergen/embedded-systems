@@ -86,3 +86,68 @@ we saw that interrupt was sent by adc to cpu when data conversion is done and di
 ## execution flow for interrupt driven io
 
 ## references
+
+## review
+
+## vector interrupts
+
+## direct mode interrupts
+
+1.  interrupt signal
+2.  jump to trap handler
+3.  read cause register and jump to the corresponding isr
+4.  start executing interrupt handler
+
+## question
+
+suppose we are asked to write a program that takes a sequence of 100 characters typed on a keyboard and processes the information contained in those 100 characters.
+
+-  assume the characters are typed at a rate of one character at every 0.125 seconds
+-  assume the processing of the 100 character sequence takes 12.4999 seconds
+
+how much cpu time will it take to complete the task with a polling driven keyboard?
+
+the cpu does not know when the data is coming so it polls constantly.  thus the time needed to recieve 100 character sequence = 100 * 0.125 seconds = 12.5 seconds
+
+total time = time to read + time to process = 12.5 + 12.4999 = 24.9999 seconds
+
+## case study si five interrupts
+
+## si-five interrupt architecture
+
+based on the source of interrupts, there are two main forms of interrupt in the si-five processor.  local and global (external) interrupts.  FE310-G002 interrupt archietcure block diagram
+
+## local and global interrupts
+
+## control and status registers (csrs)
+
+-  privilege registers for software / hardware communication
+-  use special instructions to read/write
+-  interrupt related csrs
+-  `mstatus` used to enable or disable global interrupt
+-  `mie` enable / disable individaul interrupts
+
+## machine status register `mstatus`
+
+## machine interrupt enable `mie`
+
+## machine interrupt pending `mip`
+
+## machine trap vector `mtvec`
+
+## machine cause `mcause`
+
+## interrupt priorities
+
+-  we discussed priorities in last class
+-  in sifive there are the local and global interrupts that have different priorities
+-  sifive interrupts are prioritized as follows, in decreasing order of priority 
+    -  machine external/global interrupts
+    -  machine software interrupts
+    -  machine timer interrupts
+-  individual priorities of global interrupts are determined by the plic
+
+## setting external/global interrupts
+
+-  each plic interrupt source can be assigned a priority by writing to its 31 bit memory mapped `priority` register
+-  supports 7 levels of priority (0 being lowest)

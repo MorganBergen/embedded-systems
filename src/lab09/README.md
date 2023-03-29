@@ -458,3 +458,25 @@ char ser_read(int devid);
 int ser_readline(int devid, int n, char *str);
 #endif // __EECS388_LIB_H__
 ```
+
+##  `boot`
+
+lab8@EECS388rpi15:/ $ cd boot
+lab8@EECS388rpi15:/boot $ ls
+bcm2708-rpi-b.dtb         bcm2711-rpi-cm4.dtb  kernel7l.img
+bcm2708-rpi-b-plus.dtb    bootcode.bin         kernel8.img
+bcm2708-rpi-b-rev1.dtb    cmdline.txt          kernel.img
+bcm2708-rpi-cm.dtb        config.txt           LICENCE.broadcom
+bcm2708-rpi-zero.dtb      COPYING.linux        os_config.json
+bcm2708-rpi-zero-w.dtb    fixup4cd.dat         overlays
+bcm2709-rpi-2-b.dtb       fixup4.dat           start4cd.elf
+bcm2710-rpi-2-b.dtb       fixup4db.dat         start4db.elf
+bcm2710-rpi-3-b.dtb       fixup4x.dat          start4.elf
+bcm2710-rpi-3-b-plus.dtb  fixup_cd.dat         start4x.elf
+bcm2710-rpi-cm3.dtb       fixup.dat            start_cd.elf
+bcm2710-rpi-zero-2.dtb    fixup_db.dat         start_db.elf
+bcm2710-rpi-zero-2-w.dtb  fixup_x.dat          start.elf
+bcm2711-rpi-400.dtb       issue.txt            start_x.elf
+bcm2711-rpi-4-b.dtb       kernel7.img
+
+

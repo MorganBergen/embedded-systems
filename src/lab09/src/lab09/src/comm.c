@@ -14,7 +14,11 @@ int main()
     printf("Begin the main loop.\n");
     
     while (1) {
-        // YOUR CODE HERE
+        if (ser_isready(1)) {
+            char str[80];
+            ser_readline(1, 80, str);
+            ser_printline(0, str);
+        }
     }
     return 0;
 }

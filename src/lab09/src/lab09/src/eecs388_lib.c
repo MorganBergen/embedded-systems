@@ -18,7 +18,7 @@ void gpio_mode(int gpio, int mode)
       val |= (1<<gpio);
       *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_XOR) = val;
     }
-  } else if (mode == INPUT) {
+  } else if (mode == INPUT) {`
     val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN);
     val |= (1<<gpio);
     *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_INPUT_EN) = val;

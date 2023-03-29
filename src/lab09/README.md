@@ -18,8 +18,7 @@
 │   ├── 14588-TFMini_-_Micro_Infrared_Module-03_Pinout_small.png
 │   ├── FE310-G002.pdf
 │   ├── benewake-tfmini-datasheet.pdf
-│   ├── hifive1-revb-pinout.png
-│   └── hifive1b-getting-started-guide_v1.1.pdf
+│   ├── hifive1-revb-pinout.png │   └── hifive1b-getting-started-guide_v1.1.pdf
 ├── include
 │   └── README
 ├── lib

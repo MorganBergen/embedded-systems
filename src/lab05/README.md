@@ -16,6 +16,6 @@ pulse-width modulation (pwm) is a way to encode analog signals using digital out
 
 owm has a wide variety of applications, one of which is servo motor control.  in this lab we use pwm to control a small servo motor see [microservo datasheet]("./PlatformIO/docs/sg90_microservo_datasheet.pdf")
 
-<img width="400px" src="./cycle.png">
+<img width="400px" src="./assets/cycle.png">
 
 a servo motot receives a pwm

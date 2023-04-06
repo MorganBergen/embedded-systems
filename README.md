@@ -10,6 +10,7 @@
 4.  [servo motor control programming](./src/lab05/README.md)
 5.  [real time dnn inferencing](./src/lab08/README.md)
 6.  [board to board communication](./src/lab09/README.md)
+7.  [implement an RC car’s components](./src/milestone01/README.md)
 
 -  introduction to c programming
 -  introduction to the embedded software development enviroment - sensor reading

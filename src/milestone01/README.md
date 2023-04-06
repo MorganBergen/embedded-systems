@@ -9,7 +9,6 @@
 5.  [**part 02** configuring the pca9685](#part-02-configuring-the-pca9685)
 6.  [**task 01** the breakup function](#task-01-the-breakup-function)
 7.  [**task 02** the streering function](#task-02-the-steering-function)
-8.  [**part 04**](#part )
 
 ```
 ❯ tree
@@ -33,3 +32,18 @@
 
 6 directories, 11 files
 ```
+
+##  intro
+
+this src will implement an rc car's components by incorporating elements from the previous labs.  I also will be using a new board i.e. `pca9695` for driving servo and dc motors.  `pca9695` users `i2c` to receive commands from hi-five board to generate pwm signal for the servo and dc motors.  the final project weighs `15%` of your total course grade.
+
+the car prototype that you are going to use has seven main components
+
+1.  hi-five board
+2.  pi board
+3.  motot driver `pca9695` 4-lidar
+4.  dc motot
+5.  servo motot
+6.  electronic speed controller ecs
+
+your goal in this project is to first use the hi-five board to send i2c commands to `pca9695` to drive the servo motot (for streering) and dc motots (for moving forward and backwards) (milestone 1).  then connect pi to hi-five board using `uart`.

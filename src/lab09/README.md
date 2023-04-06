@@ -460,6 +460,7 @@ int ser_readline(int devid, int n, char *str);
 
 ##  `boot`
 
+```
 lab8@EECS388rpi15:/ $ cd boot
 lab8@EECS388rpi15:/boot $ ls
 bcm2708-rpi-b.dtb         bcm2711-rpi-cm4.dtb  kernel7l.img
@@ -477,5 +478,4 @@ bcm2710-rpi-zero-2.dtb    fixup_db.dat         start_db.elf
 bcm2710-rpi-zero-2-w.dtb  fixup_x.dat          start.elf
 bcm2711-rpi-400.dtb       issue.txt            start_x.elf
 bcm2711-rpi-4-b.dtb       kernel7.img
-
-
+```

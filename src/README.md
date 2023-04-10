@@ -22,3 +22,4 @@ In EECS388 labs, you will learn how to use microcontrollers and embedded process
 5.  [real time dnn inferencing](./lab08/README.md)
 6.  [board to board communication](./lab09/README.md)
 
+

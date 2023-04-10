@@ -46,4 +46,12 @@ the car prototype that you are going to use has seven main components
 5.  servo motot
 6.  electronic speed controller ecs
 
-your goal in this project is to first use the hi-five board to send i2c commands to `pca9695` to drive the servo motot (for streering) and dc motots (for moving forward and backwards) (milestone 1).  then connect pi to hi-five board using `uart`.
+your goal in this project is to first use the hi-five board to send i2c commands to `pca9695` to drive the servo motot (for streering) and dc motots (for moving forward and backwards) (milestone 1).  then connect pi to hi-five board using `uart`.  this is to set up a connection between the two boards for sending steering commands from the pi to the hi-five board (milestone 2).  lastly, you are going to control the car using a sequence of commands sending the streering commands from the pi to the hi-five board using `uart` and then to the motors using `pwm` i1c controller (milestone 3).
+
+the project must have a group of 4 individuals
+
+##  milestone 01
+
+in this milestoen you will configure the `pwm` controller and use the hi-five board to drive the servo and dc motor.  your milestone 1 source code (`milestone1.tar.gz`) is uploaded a:wq
+:wq
+

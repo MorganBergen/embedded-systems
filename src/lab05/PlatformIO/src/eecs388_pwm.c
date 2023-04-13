@@ -19,6 +19,28 @@ void servo(int gpio, int pos)
     // YOUR CODE HERE
     // Basically, you need to take the input angle "pos" and generate the corresponding pwm signal
     // To generate the pwm signals, use gpio_write() and delay_usec()
+    //makes the signal and delay
+    
+   int pwm = ((SERVO_PULSE_MAX-SERVO_PULSE_MIN)*pos)/ 180 + SERVO_PULSE_MIN; 
+   int delay = SERVO_PERIOD-pwm;
+   
+    int pwm2=pwm;
+    int delay2=delay;
+    
+    
+    //5v pulse starts motor
+    gpio_write(gpio,ON);
+    
+    //delay for amount on
+    delay_usec(pwm);
+    //0v pulse stops motor
+    gpio_write(gpio,OFF);
+    //second delay for amount of time off
+    
+    delay_usec(delay);
+
+        
+
 }
 
 int main()
@@ -27,11 +49,9 @@ int main()
     gpio_mode(gpio, OUTPUT);
 
     while (1) {
-        /**
-         * Sweeps through angles 0 -> 180 to test the 'servo' function 
-         * 
-         * The inner loop calls the function 50 times, causing each angle
-         * to be held on the servo for ~1 second. 
+        
+        /**delay_usec(SERVO_PULSE_MAX);
+    d on the servo for ~1 second. 
          * 
          * Do you understand why 1 second?
          * 

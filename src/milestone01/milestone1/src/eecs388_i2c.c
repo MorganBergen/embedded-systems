@@ -72,8 +72,8 @@ void set_up_I2C(){
  ssigning the references high and low to these values. (Implement void breakup function in milestone1/src/eecs388_i2c.c)
  */
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
-    high = bigNum >> 8;
-    low = bigNum;
+    high = uint8_t( bigNum >> 8);
+    low = uint8_t (bigNum);
 }
 
 /*

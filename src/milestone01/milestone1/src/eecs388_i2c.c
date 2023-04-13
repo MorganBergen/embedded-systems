@@ -63,10 +63,10 @@ void set_up_I2C(){
 } 
 
 
+/*
+ * When looking at the register summary, note that each LEDn has 4 components, ON_L, ON_H, OFF_L, and OFF_H. This is because 4096 is a 12-bit number, so it must be broken up to fit into two 8-bit numbers, as I2C writes a byte at a time. L refers to the lower 8 bits, and H refers to the higher 8 bits. Your task will be to define a function that takes an integer and breaks it down into the high 8-bits and low 8-bits, assigning the references high and low to these values. (Implement void breakup function in milestone1/src/eecs388_i2c.c)
+ */
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
-    /*
-        Write Task 1 code here
-    */
 }
 
 void steering(int angle){

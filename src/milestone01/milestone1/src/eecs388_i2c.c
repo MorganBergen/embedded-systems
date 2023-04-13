@@ -117,9 +117,6 @@ void steering(int angle){
     bufWrite[4] = cycleValHigh;
 
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
-    
-
-
 }
 
 void stopMotor(){

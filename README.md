@@ -4,16 +4,16 @@
 
 **source code**
 
-1.  [programs in c](./src/lab01/README.md)
-2.  [hardware and development environment](./src/lab02/README.md)
-3.  [universal asynchronous receiver/transmission (uart)](./src/lab03/README.md)
+1.  [programs in c](./src/lab01/)
+2.  [hardware and development environment](./src/lab02/)
+3.  [universal asynchronous receiver/transmission (uart)](./src/lab03/)
 4.  [sensor reading with tfmini lidar](./src/lab04/)
 5.  [servo motor control programming](./src/lab05/)
-6.  [timer interrupt handling](./src/lab06)
+6.  [timer interrupt handling](./src/lab06/)
 7.  [intro into embedded linux](./src/lab07)
-5.  [real time dnn inferencing](./src/lab08/README.md)
-6.  [board to board communication](./src/lab09/README.md)
-7.  [implement an RC car’s components](./src/milestone01/README.md)
+5.  [real time dnn inferencing](./src/lab08/)
+6.  [board to board communication](./src/lab09/)
+7.  [implement an RC car’s components](./src/milestone01/)
 
 -  introduction to c programming
 -  introduction to the embedded software development enviroment - sensor reading

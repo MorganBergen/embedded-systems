@@ -1,4 +1,4 @@
-# lab1
+# programs in embedded c
 ## embedded systems
 
 **morgan bergen**

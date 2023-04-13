@@ -81,9 +81,27 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
  *  controlling the servo and motor electronic speed controller with pwm
  *  is very similar to how we did so in the actuator lab
  *  (reference lab05 for steering)
+ *  however in this case we will be converting values 
+ *  ranging from 0 to 20 ms to 0 to 4095 cycles
+ * 
+ *  the getservocycle function converts an angle between -45 to 45 to
+ *  a servo duty cycle 
+ *  you need to write the return cycle into LED1_OFF and LED1_OFF_H
+ *  to change the angle of the tires
+ * 
+ * int map(int angle, int lowIn, int highIn, int lowOut, int highOut)
+ * int getServoCycle(int angle)
  */
 void steering(int angle){
     
+    if (angle > 45) {
+            angle = 45;
+    } else if (angle < -45) {
+        angle = -45;
+    } 
+
+    getServoCycle(angle);
+
 }
 
 void stopMotor(){

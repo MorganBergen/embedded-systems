@@ -1,4 +1,4 @@
-ls
+
 #include <stdio.h>
 #include <stdint.h>
 #include "eecs388_lib.h"
@@ -118,8 +118,12 @@ void steering(int angle){
 
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
-
+//make the LED0_Off bit set to 280 to 
 void stopMotor(){
+    uint8_t Low;
+    uint8_t High;
+    breakup(280,&Low,&High);
+    
     /*
         Write Task 3 code here
     */

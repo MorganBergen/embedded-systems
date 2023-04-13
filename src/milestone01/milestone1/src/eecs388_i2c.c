@@ -91,16 +91,34 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
  * 
  * int map(int angle, int lowIn, int highIn, int lowOut, int highOut)
  * int getServoCycle(int angle)
+ * 
+ * 
+ * use the getServoCycle, breakup, and transfer functionn to 
+ * implement the steering function to control the streering of the car
+ * you need to alter the pwn of the servo motor
+ * angle is between the range of -45 to 45
+ * 
  */
 void steering(int angle){
-    
-    if (angle > 45) {
-            angle = 45;
-    } else if (angle < -45) {
-        angle = -45;
-    } 
 
-    getServoCycle(angle);
+    uint8_t cycleValLow;
+    uint8_t cycleValHigh;
+
+    int cycleVal;
+    _Bool success;
+    cycleVal = getServoCycle(angle);
+    
+    breakup(cycleVal, &cycleValLow, &cycleValHigh);
+
+    bufWrite[0] = PCA9685_LED0_ON_L;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+    bufWrite[3] = cycleValLow;
+    bufWrite[4] = cycleValHigh;
+
+    success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
+    
+
 
 }
 

@@ -31,8 +31,14 @@ void handle_trap()
 void timer_handler()
 {
     intr_count++;
+    //clk cycles per second
+    int hertz=32768;
+    //100 miliseconds from seconds
+    int hundredMs=hertz/10;
 
-    // YOUR CODE HERE
+    set_cycles(get_cycles()+hundredMs);
+   
+
 }
 
 void enable_timer_interrupt()
@@ -45,6 +51,9 @@ void enable_interrupt()
     // YOUR CODE HERE
     /* Look at the enable_timer_interrupt() function for hints about
        how to write this function */
+    
+       write_csr(mstatus, read_csr(mstatus) | (1 << MSTATUS_MIE_BIT));
+
 }
 
 void disable_interrupt()
@@ -52,6 +61,8 @@ void disable_interrupt()
     // YOUR CODE HERE
     /* Look at the enable_timer_interrupt() function for hints about
        how to write this function */
+     write_csr (mstatus, read_csr(mstatus) | (1 << MSTATUS_MIE_BIT));
+     write_csr(mstatus, (read_csr(mstatus) ^ (1 << MSTATUS_MIE_BIT)));
 }
 
 void register_trap_handler(void *func)

@@ -15,14 +15,6 @@
 6.  [board to board communication](./src/lab09/)
 7.  [implement an RC car’s components](./src/milestone01/)
 
--  introduction to c programming
--  introduction to the embedded software development enviroment - sensor reading
--  servo moto control - timers
--  introduction to embedded linux - linux scheduler
--  real time dnn inference
--  self driving car
--  microcontrollers and embedded processors for interacting with the physical enviroment using i/o devices
-
 **material**
 
 the purpose of this repository is to illustrate material pertaining to the course embedded systems.  An embedded system is an intelligent system with special-purpose computation capabilities, (e.g. smart appliance, cars, medical devices, etc.)  The material will cover the hardware and software architecture of embedded systems, as how to program a microprocessor to interact with the physical world through sensors and actuators.
@@ -37,4 +29,10 @@ the purpose of this repository is to illustrate material pertaining to the cours
 - concurrency and threads, how to utilize the available parallelism in the hardware and develop concurrent embedded software
 - scheduling and real-time scheduling concepts in linux
 - cpu and memory architecture, how instructions get executed in the hardware and the micro-architecture of a basic RISC-V, single-cycle processor.
-
+-  introduction to c programming
+-  introduction to the embedded software development enviroment - sensor reading
+-  servo moto control - timers
+-  introduction to embedded linux - linux scheduler
+-  real time dnn inference
+-  self driving car
+-  microcontrollers and embedded processors for interacting with the physical enviroment using i/o devices

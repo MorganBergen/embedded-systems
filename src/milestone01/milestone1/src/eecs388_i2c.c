@@ -75,8 +75,8 @@ void set_up_I2C(){
  ssigning the references high and low to these values. (Implement void breakup function in milestone1/src/eecs388_i2c.c)
  */
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
-    high = uint8_t( bigNum >> 8);
-    low = uint8_t (bigNum);
+    *low = bigNum & 0xff;
+    *high = (bigNum >> 8) & 0xff;
 }
 
 /*
@@ -104,32 +104,22 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
  */
 void steering(int angle){
 
-    uint8_t cycleValLow;
-    uint8_t cycleValHigh;
-
-    int cycleVal;
-    _Bool success;
-    cycleVal = getServoCycle(angle);
+    int cycleVal = getServoCycle(angle);
     
-    breakup(cycleVal, &cycleValLow, &cycleValHigh);
-
-    bufWrite[0] = PCA9685_LED0_ON_L;
+    bufWrite[0] = PCA9685_LED0_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-    bufWrite[3] = cycleValLow;
-    bufWrite[4] = cycleValHigh;
 
+    breakup(cycleVal, &bufWrite[3]. &bufWrite[4]);
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
+
 //make the LED0_Off bit set to 280 to 
 void stopMotor(){
     uint8_t Low;
     uint8_t High;
     breakup(280,&Low,&High);
     
-    /*
-        Write Task 3 code here
-    */
 }
 
 void driveForward(uint8_t speedFlag){

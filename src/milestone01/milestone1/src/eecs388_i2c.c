@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4cd0da4 (added linked files for readme)
 #include <stdio.h>
 #include <stdint.h>
 #include "eecs388_lib.h"

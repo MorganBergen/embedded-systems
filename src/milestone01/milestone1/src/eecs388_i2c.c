@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 4cd0da4 (added linked files for readme)
 #include <stdio.h>
 #include <stdint.h>
 #include "eecs388_lib.h"
@@ -115,23 +111,52 @@ void steering(int angle){
 }
 
 //make the LED0_Off bit set to 280 to 
-void stopMotor(){
-    uint8_t Low;
-    uint8_t High;
-    breakup(280,&Low,&High);
-    
+// void stopMotor(){
+//   uint8_t Low;
+//   uint8_t High;
+//   breakup(280,&Low,&High);
+// }
+
+void stopMotor() {
+    breakup(280, &bufWrite[3], &bufWrite[4]);
+    bufWrite[0] = PCA9685_LED1_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+
+     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
 
 void driveForward(uint8_t speedFlag){
-    /*
-        Write Task 4 code here
-    */
+    if (speedFlag == 1) {
+        breakup(313, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 2) {
+        breakup(315, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 3) {
+        breakup(317, &bufWrite[3], &bufWrite[4]);
+    }
+
+    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+    
+    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
 
 void driveReverse(uint8_t speedFlag){
-    /*
-        Write task 5 code here
-    */
+
+    if (speedFlag == 1) {
+        breakup(267, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 2) {
+        breakup(265, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 3) {
+        breakup(263, &bufWrite[3], &bufWrite[4]);
+    }
+
+    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+
+    metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
 int main()

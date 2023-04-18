@@ -221,8 +221,10 @@ when looking at the register summary, note that each LEDn has 4 components, `ON_
 
 ```c
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
-    high = bigNum >> 8;
-    low = bigNum;
+
+    *low = bigNum & 0xff;
+
+    *high = (bigNum >> 8) & 0xff;
 }
 ```
 
@@ -310,9 +312,29 @@ implement the following function to make the wheels drive forward.  further deta
  * speedFlag = 2 -> value to breakup = 315 
  * speedFlag = 3 -> value to breakup = 317
  */
-void driveForward(uint8_t speedFlag) {
 
+void driveForward(uint8_t speedFlag){
+
+    if (speedFlag == 1) {
+
+        breakup(313, &bufWrite[3], &bufWrite[4]);
+
+    } else if (speedFlag == 2) {
+
+        breakup(315, &bufWrite[3], &bufWrite[4]);
+
+    } else if (speedFlag == 3) {
+
+        breakup(317, &bufWrite[3], &bufWrite[4]);
+
+    }
+
+    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
+
 // example luse:  driveForward(3); sets LED0_Off to 317
 ```
 
@@ -326,11 +348,25 @@ implement the following function to make the wheels drive in reverse.  further d
  * speedFlag = 1 -> value to breakup = 267
  * speedFlag = 2 -> value to breakup = 265 
  * speedFlag = 3 -> value to breakup = 263
+ * exmaple use:  driveReverse(2); -> sets LED0_Off to 265
  */
-void driveReverse(uint8_t speedFlag) {
-    
+
+void driveReverse(uint8_t speedFlag){
+
+    if (speedFlag == 1) {
+        breakup(267, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 2) {
+        breakup(265, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 3) {
+        breakup(263, &bufWrite[3], &bufWrite[4]);
+    }
+
+    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+
+    metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
-// exmaple use:  driveReverse(2); -> sets LED0_Off to 265
 ```
 
 ##  **task 06** fully controlling the pca9685
@@ -346,5 +382,3 @@ using all your implemented functions perform the following sequence as follows:
 6.  drive in reverse (wait for 2 seconds)
 7.  set steering heading to 0 degrees (wait for 2 seconds)
 8.  stop the motors
-
-

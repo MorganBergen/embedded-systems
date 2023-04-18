@@ -63,41 +63,41 @@ void set_up_I2C(){
 } 
 
 
-/*
- * When looking at the register summary, note that each LEDn has 4 components, ON_L, ON_H, OFF_L, and OFF_H. 
- This is because 4096 is a 12-bit number, so it must be broken up to fit into two 8-bit numbers, as I2C writes a byte at a time. 
- L refers to the lower 8 bits, and H refers to the higher 8 bits. 
- Your task will be to define a function that takes an integer and breaks it down into the high 8-bits and low 8-bits, a
- ssigning the references high and low to these values. (Implement void breakup function in milestone1/src/eecs388_i2c.c)
- */
+/* defining the breakup function
+ * task 1: breaking 12 bit into two 8-bit define the function created that recieves a 12 bit number,
+ * 0 to 4096 and breaks it up into two 8 bit numbers. assign these values to a referenced 
+ * value handed into the function. 
+ *
+ * ex: 
+ * uint8_t variable1;
+ * uint8_t variable2;
+ * breakup(2000,&variable1,&variable2);
+ * variable1 -> low 8 bits of 2000
+ * variable2 -> high 8 bits of 2000
+ */    
+
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
+
     *low = bigNum & 0xff;
+
     *high = (bigNum >> 8) & 0xff;
 }
 
-/*
- *  before we define steering you need info about the servo motors on the car
- *  controlling the servo and motor electronic speed controller with pwm
- *  is very similar to how we did so in the actuator lab
- *  (reference lab05 for steering)
- *  however in this case we will be converting values 
- *  ranging from 0 to 20 ms to 0 to 4095 cycles
- * 
- *  the getservocycle function converts an angle between -45 to 45 to
- *  a servo duty cycle 
- *  you need to write the return cycle into LED1_OFF and LED1_OFF_H
- *  to change the angle of the tires
- * 
- * int map(int angle, int lowIn, int highIn, int lowOut, int highOut)
- * int getServoCycle(int angle)
- * 
- * 
- * use the getServoCycle, breakup, and transfer functionn to 
- * implement the steering function to control the streering of the car
- * you need to alter the pwn of the servo motor
- * angle is between the range of -45 to 45
- * 
+/* 
+ * changing Steering Heading
+ * task 2: using getServoCycle(), bufWrite, bufRead, breakup(), and and metal_i2c_transfer(),
+ * implement the function defined above to control the servo by sending it an angle ranging 
+ * from -45 to 45. use the getServoCycle function to get the value to breakup.
+ *
+ * ex: 
+ * int valToBreak = getServoCycle(45);
+ * >>>sets valToBreak to 355
+ *
+ * note: the motor's speed controller is either LED0 or LED1 depending on where its plugged into 
+ * the board. If its LED1, simply add 4 to the LED0 address
+ * ex: steering(0); -> driving angle forward
  */
+
 void steering(int angle){
 
     int cycleVal = getServoCycle(angle);
@@ -110,191 +110,142 @@ void steering(int angle){
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
-//make the LED0_Off bit set to 280 to 
-// void stopMotor(){
-//   uint8_t Low;
-//   uint8_t High;
-//   breakup(280,&Low,&High);
-// }
+/*
+ * motor config/stop. This will cause a second beep upon completion
+ * task 3: using bufWrite, bufRead, breakup(), and metal_i2c_transfer(), implement the 
+ * funcion made above. This function configure the motor by writing a value of 280 to the motor.
+ * include a 2 second delay after calling this function in order to calibrate
+ *
+ * note: the motor's speed controller is either LED0 or LED1 depending on where its plugged into 
+ * the board. If its LED1, simply add 4 to the LED0 address
+ * ex: stopMotor();
+ */
 
 void stopMotor() {
     breakup(280, &bufWrite[3], &bufWrite[4]);
     bufWrite[0] = PCA9685_LED1_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-
-     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
+    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
+/*
+ * ###########################################################################################
+ * ATTENTION: The following section will cause the wheels to move. confirm that the robot 
+ * is propped up to avoid it driving away, as well as that nothing is touching the wheels 
+ * and can get caught in them if anything goes wrong, unplug the hifive board from the 
+ * computer to stop the motors from moving avoid sticking your hand inside the car while 
+ * its wheels are spinning
+ * ###########################################################################################
+ */
+
+/* 
+ * motor forward
+ * task 4: using bufWrite, bufRead, breakup(), and metal_i2c_transfer(), implement the function
+ * made above to Drive the motor forward. the given speedFlag will alter the motor speed as follows
+ *
+ * speedFlag = 1 -> value to breakup = 313 
+ * speedFlag = 2 -> value to breakup = 315 (optional)
+ * speedFlag = 3 -> value to breakup = 317 (optional)
+ *
+ * note 1: the motor's speed controller is either LED0 or LED1 depending on where its plugged into 
+ * the board. If its LED1, simply add 4 to the LED0 address or type and replace LED1 with LED0
+ * ex: driveForward(1);
+ */
 
 void driveForward(uint8_t speedFlag){
+
     if (speedFlag == 1) {
+
         breakup(313, &bufWrite[3], &bufWrite[4]);
+
     } else if (speedFlag == 2) {
+
         breakup(315, &bufWrite[3], &bufWrite[4]);
+
     } else if (speedFlag == 3) {
+
         breakup(317, &bufWrite[3], &bufWrite[4]);
     }
 
     bufWrite[0] = PCA9685_LED1_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-    
     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
+
+/* 
+ * motor Reverse
+ * task 5: using bufWrite, bufRead, breakup(), and metal_i2c_transfer(), implement the function
+ * made above to Drive the motor backward. the given speedFlag will alter the motor speed as follows:
+ *
+ * speedFlag = 1 -> value to breakup = 267 
+ * speedFlag = 2 -> value to breakup = 265 (optional)
+ * speedFlag = 3 -> value to breakup = 263 (optional)
+ *
+ * note 1: the motor's speed controller is either LED0 or LED1 depending on where its plugged into
+ * the board. if its LED1, simply add 4 to the LED0 address or type and replace LED1 with LED0
+ * ex: driveReverse(1);
+ */
 
 void driveReverse(uint8_t speedFlag){
 
     if (speedFlag == 1) {
+
         breakup(267, &bufWrite[3], &bufWrite[4]);
+
     } else if (speedFlag == 2) {
+
         breakup(265, &bufWrite[3], &bufWrite[4]);
+
     } else if (speedFlag == 3) {
+
         breakup(263, &bufWrite[3], &bufWrite[4]);
     }
 
     bufWrite[0] = PCA9685_LED1_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
 int main() {
+
+/*
+ * fully controlling the PCA9685
+ * task 6: using previously defined functions, perform the following sequence of actions
+ *
+ *    -  configure the motors (wait for 2 seconds)
+ *    -  set the steering heading to 0 degrees 
+ *    -  drive forward (wait for 2 seconds)
+ *    -  change the steering heading to 20 degrees (wait for 2 seconds)
+ *    -  stop the motor (wait for 2 seconds)
+ *    -  drive forward (wait for 2 seconds)
+ *    -  set steering heading to 0 degrees (wait for 2 seconds)
+ *    -  stop the motor
+ */
+    
     set_up_I2C();
 
     stopMotor();
     delay(2000);
-    
-    //Defining the breakup function
-    /*
-        Task 1: breaking 12 bit into two 8-bit
-        Define the function created that recieves a 12 bit number,
-        0 to 4096 and breaks it up into two 8 bit numbers.
 
-        Assign these values to a referenced value handed into
-        the function. 
+    steering(0);
+    delay(2000);
 
-        ex: 
-        uint8_t variable1;
-        uint8_t variable2;
-        breakup(2000,&variable1,&variable2);
-        variable1 -> low 8 bits of 2000
-        variable2 -> high 8 bits of 2000
+    driveForward(1);
+    delay(2000);
 
+    steering(20);
+    delay(2000);
 
-    */    
-    
-    //Changing Steering Heading
-    /*
-        Task 2: using getServoCycle(), bufWrite, bufRead, 
-        breakup(), and and metal_i2c_transfer(), implement 
-        the function defined above to control the servo
-        by sending it an angle ranging from -45 to 45.
+    stopMotor();
+    delay(2000);
 
-        Use the getServoCycle function to get the value to 
-        breakup.
+    driveReverse(1);
+    delay(2000);
 
-        ex: 
-        int valToBreak = getServoCycle(45);
-        >>>sets valToBreak to 355
-        
-        note: the motor's speed controller is either 
-        LED0 or LED1 depending on where its plugged into 
-        the board. If its LED1, simply add 4 to the LED0
-        address
+    steering(0);
+    delay(2000);
 
-        ex: steering(0); -> driving angle forward
-    */
-    
-    
-    //Motor config/stop. This will cause a second beep upon completion
-    /*
-        -Task 3: using bufWrite, bufRead, breakup(), and
-        and metal_i2c_transfer(), implement the funcion made
-        above. This function Configure the motor by 
-        writing a value of 280 to the motor.
-
-        -include a 2 second delay after calling this function
-        in order to calibrate
-
-        -Note: the motor's speed controller is either 
-        LED0 or LED1 depending on where its plugged into 
-        the board. If its LED1, simply add 4 to the LED0
-        address
-
-        ex: stopMotor();
-    */
-
-
-    /*
-    ############################################################
-        ATTENTION: The following section will cause the        
-        wheels to move. Confirm that the robot is              
-        Propped up to avoid it driving away, as well as         
-        that nothing is touching the wheels and can get 
-        caught in them
-
-        If anything goes wrong, unplug the hifive board from
-        the computer to stop the motors from moving 
-        
-        Avoid sticking your hand inside the 
-        car while its wheels are spinning
-    #############################################################
-    */
-    
-
-    //Motor Forward
-    /*
-        -Task 4: using bufWrite, bufRead, breakup(), and
-        and metal_i2c_transfer(), implement the function
-        made above to Drive the motor forward. The given
-        speedFlag will alter the motor speed as follows:
-        
-        speedFlag = 1 -> value to breakup = 313 
-        speedFlag = 2 -> value to breakup = 315(Optional)
-        speedFlag = 3 -> value to breakup = 317(Optional)
-
-        -note 1: the motor's speed controller is either 
-        LED0 or LED1 depending on where its plugged into 
-        the board. If its LED1, simply add 4 to the LED0
-        address or type and replace LED1 with LED0
-
-        ex: driveForward(1);
-    */
-    
-    //Motor Reverse
-    /*
-        -Task 5: using bufWrite, bufRead, breakup(), and
-        and metal_i2c_transfer(), implement the function
-        made above to Drive the motor backward. The given
-        speedFlag will alter the motor speed as follows:
-        
-        speedFlag = 1 -> value to breakup = 267 
-        speedFlag = 2 -> value to breakup = 265(Optional)
-        speedFlag = 3 -> value to breakup = 263(Optional)
-
-        -note 1: the motor's speed controller is either 
-        LED0 or LED1 depending on where its plugged into 
-        the board. If its LED1, simply add 4 to the LED0
-        address or type and replace LED1 with LED0
-
-        ex: driveReverse(1);
-    */
-    
-    
-    //Fully Controlling the PCA9685
-    /*
-        -Task 6: using previously defined functions, 
-        perform the following sequence of actions
-        
-        -Configure the motors (wait for 2 seconds)
-        -Set the steering heading to 0 degrees 
-        -Drive forward (wait for 2 seconds)
-        -Change the steering heading to 20 degrees (wait for 2 seconds)
-        -Stop the motor (wait for 2 seconds)
-        -Drive forward (wait for 2 seconds)
-        -Set steering heading to 0 degrees (wait for 2 seconds)
-        -Stop the motor
-    */
-
+    stopMotor();
 }

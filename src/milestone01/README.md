@@ -157,7 +157,7 @@ success metal_i2c_write(i2c, PCA9685_I2C_ADDRESS, 2, bufWrite, METAL_i2c_STOP_DI
 
 we will now send several commands in order to configure the MODE1 register. For reference, the configuration is defined as follows:
 
-<img src="./assets/table-05.png" align="right" width=400px>
+<img src="./assets/table-05.png" width=400px>
 
 the following commands will successfully configure the pca9695 lines 37 - 55 of [`eecs388_i2c.c`](./milestone1/src/eecs388_i2c.c)
 
@@ -191,7 +191,7 @@ _extra information: MODE1_AI stands for auto-increment. this means that each sub
 
 ##  **part 03** using the transfer method to control the pca9695 servo control
 
-<img src="./assets/table-04.png" align="right" width=400px>
+<img src="./assets/table-04.png" width=400px>
 
 ```c
 /*

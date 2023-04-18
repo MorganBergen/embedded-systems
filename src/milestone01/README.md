@@ -71,7 +71,7 @@ in this section you will configure the pwn controller and use the hi-five board 
 
 you need to complete the 6 tasks highlighted in green color to finish milestone 1.  in order to accomplish this streering and motor contro, the system will require stronger servos than previously used in the lab and subsequently needs an external power supply along with a dedicated servo driver.  the `pca9685` is a 16 channel 12-bit `pwn` servo driver which uses the `ica` serial communication protocol.  in `pca9685` nomenclature, the output channels are called led channels (because one of the main use-cases of the board is to drive `leds`.  we use channel `0` and channel `1` (i.e. `LED0` and `LED1`) for driving servo motor and dc motor, respectively.
 
-<img src="./assets/pca9685.png" width=500px>
+<img src="./assets/pca9685.png" style="display: block; margin-left: auto; margin-right: auto;" width=500px>
 
 you do not need to know the low-level operation of the `i2c` protocol to finish this milestone.  instead you are going to use ready-to-use libraries to communicate over ther `i2c` interface.  on the hifive board, the `i2c` core is from a 3rd party provider called [opencores](https://opencores.org/projects/i2c) the framework used by hifive, freedom-e-sdk or metal library includes an i2c library under the metal folder.
 

@@ -228,6 +228,22 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
 }
 ```
 
+###  breakup function explaination
+
+`void breakup(int bigNum, uint8_t* low, uint_t* high)` takes in the 12-bit integer `bigNum` and breaks it into two 8-bit integers, storing the results in the memory locations pointed to by `low` and `high`.   
+
+1.  `int bigNum` this is the input 12-bit number that will be broken up into 8-bit numbers, the range of `bigNum`'s value is from 0 to 4095.
+
+2.  `uint8_t* low`:  is a pointer to an 8-bit unsigned integer where the lower 8 bits of `bigNum` (bits 0 through 8) will be stored.
+
+3.  `uint8_t* high`:  is the pointer to the 8-bit unsigned integer where the higher bits of `bigNum` (bits 8 through 11) will be stored.
+
+4.  `*low = bigNum & 0xff;` we use the bitwise AND operator to extract the lower 8 bits of `bigNum` and the hexadecimal value `0xff` corresponding to the value $11111111_{2}$ in binary, so when `bigNum & 0xff` only the lower 8 bits are retained.  the result is then stored in the memory location pointed to by `low`
+
+5.  `*high = (bigNum >> 8) & 0xff;` this shifts `bigNum` 8 bits to the _right_ using the bitwise right shift operator `>>`.  this brings the higher 4 bits (bits 8 through 11) of `bigNum` into the lower 4 bits of the result.  the bitwise AND operator `&` is then used with `0xff` to retain only the lower 8 bits of the shifted value.  the result is stored in the memory location pointed to by `high`.
+
+after the `breakup(...)` is called, the two 8-bit integers will be stored in the memory locations pointed ot by `low` and `high`.
+
 ##  **task 02** the streering function
 
 before we define the second task you needd some information about the servo motors on the car.  controlling the servo motor electronic speed controller with pwm is very similar to how we did so in the actuator lab.  however in this case we will be converting values ranging from 0 to 20 ms to 0 to 4095 cycles.
@@ -259,21 +275,13 @@ your task is to use the `getServoCycle`, `breakup` and `transfer` functions to i
 ```c
 void steering(int angle){
 
-    uint8_t cycleValLow;
-    uint8_t cycleValHigh;
-
-    int cycleVal;
-    _Bool success;
-    cycleVal = getServoCycle(angle);
+    int cycleVal = getServoCycle(angle);
     
-    breakup(cycleVal, &cycleValLow, &cycleValHigh);
-
-    bufWrite[0] = PCA9685_LED0_ON_L;
+    bufWrite[0] = PCA9685_LED0_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-    bufWrite[3] = cycleValLow;
-    bufWrite[4] = cycleValHigh;
 
+    breakup(cycleVal, &bufWrite[3]. &bufWrite[4]);
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 ```
@@ -354,11 +362,17 @@ implement the following function to make the wheels drive in reverse.  further d
 void driveReverse(uint8_t speedFlag){
 
     if (speedFlag == 1) {
+
         breakup(267, &bufWrite[3], &bufWrite[4]);
+
     } else if (speedFlag == 2) {
+
         breakup(265, &bufWrite[3], &bufWrite[4]);
+
     } else if (speedFlag == 3) {
+
         breakup(263, &bufWrite[3], &bufWrite[4]);
+
     }
 
     bufWrite[0] = PCA9685_LED1_ON_L + 4;
@@ -382,3 +396,33 @@ using all your implemented functions perform the following sequence as follows:
 6.  drive in reverse (wait for 2 seconds)
 7.  set steering heading to 0 degrees (wait for 2 seconds)
 8.  stop the motors
+
+```c
+
+int main() {
+    set_up_I2C();
+
+    stopMotor();
+    delay(2000);
+
+    steering(0);
+    delay(2000);
+
+    driveForward(1);
+    delay(2000);
+
+    steering(20);
+    delay(2000);
+
+    stopMotor();
+    delay(2000);
+
+    driveReverse(1);
+    delay(2000);
+
+    steering(0);
+    delay(2000);
+
+    stopMotor();
+}
+```

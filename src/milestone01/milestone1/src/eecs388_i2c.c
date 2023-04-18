@@ -159,9 +159,11 @@ void driveReverse(uint8_t speedFlag){
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
-int main()
-{
+int main() {
     set_up_I2C();
+
+    stopMotor();
+    delay(2000);
     
     //Defining the breakup function
     /*

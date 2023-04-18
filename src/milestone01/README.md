@@ -17,6 +17,9 @@ teammates
 5.  [**part 02** configuring the pca9685](#part-02-configuring-the-pca9685)
 6.  [**part 03** using the transfer method to control the pca9695 servo control](#part-03-using-the-transfer-method-to-control-the-pca9695-servo-control)
 7.  [**task 01** the breakup function](#task-01-the-breakup-function)
+
+    [breakup function explaination](#breakup-function-explaination)
+
 8.  [**task 02** the streering function](#task-02-the-steering-function)
 9.  [**part 04** using the transfer methdo to control the pca9695 motor control](#part-04-using-the-transfer-methdo-to-control-the-pca9695-motor-control)
 10. [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function)
@@ -285,6 +288,8 @@ void steering(int angle){
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 ```
+
+###
 
 ##  **part 04** using the transfer methdo to control the pca9695 motor control
 

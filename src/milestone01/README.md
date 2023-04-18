@@ -18,9 +18,12 @@ teammates
 6.  [**part 03** using the transfer method to control the pca9695 servo control](#part-03-using-the-transfer-method-to-control-the-pca9695-servo-control)
 7.  [**task 01** the breakup function](#task-01-the-breakup-function)
 
-    [breakup function explaination](#breakup-function-explaination)
+    [explaination](#explaination-0)
 
-8.  [**task 02** the streering function](#task-02-the-steering-function)
+8.  [**task 02** the streering function](#task-02-the-steering-function) 
+
+    [explaination](#explaination-1)
+
 9.  [**part 04** using the transfer methdo to control the pca9695 motor control](#part-04-using-the-transfer-methdo-to-control-the-pca9695-motor-control)
 10. [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function)
 11. [**task 04** drive forward function](#task-04-drive-forward-function)
@@ -231,7 +234,7 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
 }
 ```
 
-###  breakup function explaination
+###  explaination {#explaination-0}
 
 `void breakup(int bigNum, uint8_t* low, uint_t* high)` takes in the 12-bit integer `bigNum` and breaks it into two 8-bit integers, storing the results in the memory locations pointed to by `low` and `high`.   
 

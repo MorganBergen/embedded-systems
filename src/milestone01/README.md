@@ -17,13 +17,7 @@ teammates
 5.  [**part 02** configuring the pca9685](#part-02-configuring-the-pca9685)
 6.  [**part 03** using the transfer method to control the pca9695 servo control](#part-03-using-the-transfer-method-to-control-the-pca9695-servo-control)
 7.  [**task 01** the breakup function](#task-01-the-breakup-function)
-
-    [explaination](#explaination-0)
-
 8.  [**task 02** the streering function](#task-02-the-steering-function) 
-
-    [explaination](#explaination-1)
-
 9.  [**part 04** using the transfer methdo to control the pca9695 motor control](#part-04-using-the-transfer-methdo-to-control-the-pca9695-motor-control)
 10. [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function)
 11. [**task 04** drive forward function](#task-04-drive-forward-function)
@@ -234,7 +228,7 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
 }
 ```
 
-###  explaination {#explaination-0}
+###  explaination
 
 `void breakup(int bigNum, uint8_t* low, uint_t* high)` takes in the 12-bit integer `bigNum` and breaks it into two 8-bit integers, storing the results in the memory locations pointed to by `low` and `high`.   
 
@@ -292,7 +286,23 @@ void steering(int angle){
 }
 ```
 
-###
+###  explaination
+
+the `void steering(int angle` function sets the steering angle of the car by controlling the servo motor.  it accepst the input `angle`, we expect to be an integer value ranging from -45 to 45 degree, and then sends the corresponding pwm signal to the servo motor.
+
+1.  `int cycleVal = getServoCycle(angle);` calls the `getServoCycle()` function which accepts the angle input and returns the corresponding pwn cycle value need to set teh servo motor to the angle.  we se the result is stored in `cycleVal` var.
+
+2.  `bufWrite[0] = PCA9685_LED0_ON_L + 4;`  this sets the first element of the `bufWrite` array to the address of the first low byte of the ON time for the servo motor channel (`LED1_ON_L`).  in this case `PCA9685_LED0_ON_L` is the address of the first low byte of the ON time for LED0 and by adding 4 we move the corresponding address for LED1.
+
+3.  `bufWrite[1] = 0;` this sets the second element of the `bufWrite` array to 0, which represents the high byte of the ON time for the servo motor channel.  this means that the ON time starts at the beginning of the cycle.
+
+4.  `bufWrite[2] = 0;` this sets the third element of the `bufWrite` array to 0, which is the low byte of the OFF time for the servo motor channel.
+
+5.  `breakp(cycleVal, &bufWrite[3], &bufWrite[4]);` by calling the `breakup()` function we break up the 12-bit `cycleVal` into two 8-bit values and store them in the memory locations pointed to by `&bufWrite[3]` and `&bufWrite[4]`.  these values represent the high byte and low byte of the OFF time for the servo respectively.
+
+6.  `success = metal_i2c_tranfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);` this line calls the `metal_i2c_transfer()` function from the metal library which sends the data stored in the `bufWrite` array to the i2c device with the specified address `PCA9685_I2C_ADDRESS`.  the function writes 5 bytes of data from the `bufWrite` and reads 1 byte of data into `bufRead`.  the success of the operation is stored in the `success` variable.
+
+after calling the `steering()` function with the desired angle, the servo motor will be set to the corresponding angle by sending the appropriate pwm signal via the i2c interface to the PCA9685 module.
 
 ##  **part 04** using the transfer methdo to control the pca9695 motor control
 
@@ -316,6 +326,8 @@ void stopMotor() {
 }
 // example use stopMotor(); -> sets LED0_off to 280
 ```
+
+###  explaination 
 
 ##  **task 04** drive forward function
 

@@ -290,9 +290,11 @@ implement the following function to stop the wheels from moving.  the function a
 
 ```c
 void stopMotor() {
-
-    
-
+    breakup(280, &bufWrite[3]. &bufWrite[4]);
+    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+    metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 // example use stopMotor(); -> sets LED0_off to 280
 ```
@@ -344,11 +346,5 @@ using all your implemented functions perform the following sequence as follows:
 6.  drive in reverse (wait for 2 seconds)
 7.  set steering heading to 0 degrees (wait for 2 seconds)
 8.  stop the motors
-
-
-
-
-
-
 
 

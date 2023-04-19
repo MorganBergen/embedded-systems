@@ -513,4 +513,22 @@ int main() {
 
 ###  explaination
 
-the main demonstrates a sequence of actions by calling the functions we previously defined.
+the main demonstrates a sequence of actions by calling the functions we previously defined.  the instructions were pretty straight forward.
+
+1.  `set_up_I2C()` is called to initialize and configure the i2c communication with the PCA9685 device.  
+2.  `stopmotor()` is called to configure the motor in a stopped state.  the motor is calibrated by writing a value of 280 to the motor.
+3.  `delay(2000)` 2 second delay, this allows the motor to calibrate
+4.  `steering(0)` is called to set the steering heading to 0 degrees (meaning straight forward)
+5.  `delay(2000)` 2 second delay
+6.  `driveForward(1)` is called to drive the motor forward at speed level 1
+7.  `delay(2000)` 2 second delay
+8.  `steering(2)` is called to change the steering heading to 20 degrees
+9.  `delay(2000)` 2 second delay
+10. `stopMotor()` is called to again stop the motor
+11. `delay(2000)` 2 second delay
+12. `driveReverse(1)`  is called to drive the motor in reverse at speed level 1
+13. `steering(0)` is called to set the steering heading back to 0 degrees
+14. `delay(2000)` is called to again stop the motor
+15. `stopMotor()` is called one last time to stop the motor
+
+in summary as the instructions stated, the main initailizes the i2c communication, calibrates the motor, sets the steering angle, drives the motor forward, changes the steering angle, stops the motor, drives the motor in reverse, sets the steering angle back to 0 degrees, and finally stops the motor again.

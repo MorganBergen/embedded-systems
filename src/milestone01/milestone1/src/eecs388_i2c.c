@@ -170,7 +170,7 @@ void driveForward(uint8_t speedFlag){
     bufWrite[0] = PCA9685_LED1_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
+    metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
 /* 

@@ -106,7 +106,8 @@ void steering(int angle){
     bufWrite[1] = 0;
     bufWrite[2] = 0;
 
-    breakup(cycleVal, &bufWrite[3]. &bufWrite[4]);
+    breakup(cycleVal, &bufWrite[3], &bufWrite[4]);
+    int success; 
     success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -123,7 +124,7 @@ void steering(int angle){
 
 void stopMotor() {
     breakup(280, &bufWrite[3], &bufWrite[4]);
-    bufWrite[0] = PCA9685_LED1_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
@@ -167,7 +168,7 @@ void driveForward(uint8_t speedFlag){
         breakup(317, &bufWrite[3], &bufWrite[4]);
     }
 
-    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
@@ -202,7 +203,7 @@ void driveReverse(uint8_t speedFlag){
         breakup(263, &bufWrite[3], &bufWrite[4]);
     }
 
-    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);

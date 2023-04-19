@@ -78,7 +78,7 @@ void set_up_I2C(){
 
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
 
-    *low = bigNum & 0xff;
+    *low = bigNum & 0x00ff;
 
     *high = (bigNum >> 8) & 0xff;
 }
@@ -102,13 +102,13 @@ void steering(int angle){
 
     int cycleVal = getServoCycle(angle);
     
-    bufWrite[0] = PCA9685_LED0_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L+4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
 
     breakup(cycleVal, &bufWrite[3], &bufWrite[4]);
-    int success; 
-    success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
+ 
+    metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
 /*
@@ -123,8 +123,14 @@ void steering(int angle){
  */
 
 void stopMotor() {
+    /*breakup(280, &bufWrite[3], &bufWrite[4]);
+    bufWrite[0] = PCA9685_LED0_OFF_L + 4;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);*/
     breakup(280, &bufWrite[3], &bufWrite[4]);
-    bufWrite[0] = PCA9685_LED0_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L ;
+    printf(PCA9685_LED0_ON_L);
     bufWrite[1] = 0;
     bufWrite[2] = 0;
     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
@@ -153,24 +159,27 @@ void stopMotor() {
  * ex: driveForward(1);
  */
 
-void driveForward(uint8_t speedFlag){
+void driveForward(int speedFlag){
 
-    if (speedFlag == 1) {
-
-        breakup(313, &bufWrite[3], &bufWrite[4]);
-
-    } else if (speedFlag == 2) {
-
-        breakup(315, &bufWrite[3], &bufWrite[4]);
-
-    } else if (speedFlag == 3) {
-
-        breakup(317, &bufWrite[3], &bufWrite[4]);
-    }
-
-    bufWrite[0] = PCA9685_LED0_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
+
+    breakup(313, &bufWrite[3], &bufWrite[4]);
+
+    // if (speedFlag == 1) {
+
+    //     breakup(313, &bufWrite[3], &bufWrite[4]);
+
+    // } else if (speedFlag == 2) {
+
+    //     breakup(315, &bufWrite[3], &bufWrite[4]);
+
+    // } else if (speedFlag == 3) {
+
+    //     breakup(317, &bufWrite[3], &bufWrite[4]);
+    // }
+  
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -184,7 +193,7 @@ void driveForward(uint8_t speedFlag){
  * speedFlag = 3 -> value to breakup = 263 (optional)
  *
  * note 1: the motor's speed controller is either LED0 or LED1 depending on where its plugged into
- * the board. if its LED1, simply add 4 to the LED0 address or type and replace LED1 with LED0
+ * the board.4 if its LED1, simply add  to the LED0 address or type and replace LED1 with LED0
  * ex: driveReverse(1);
  */
 
@@ -203,7 +212,7 @@ void driveReverse(uint8_t speedFlag){
         breakup(263, &bufWrite[3], &bufWrite[4]);
     }
 
-    bufWrite[0] = PCA9685_LED0_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L ;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
@@ -225,29 +234,40 @@ int main() {
  *    -  stop the motor
  */
     
+    
+   
+
     set_up_I2C();
+    printf("setup\n");
 
     stopMotor();
-    delay(2000);
+     printf("stopmotor\n");
+     delay(2000);  
+    
 
-    steering(0);
-    delay(2000);
-
+     steering(20);
+    printf("steering\n");
+     delay(2000);
+   
     driveForward(1);
-    delay(2000);
+    printf("drive\n");
+     delay(2000);
 
-    steering(20);
-    delay(2000);
+     stopMotor();
+     printf("stopmotor\n");
+     delay(2000);
+    
+     driveReverse(1);
+     printf("drivereverse\n");
+     delay(2000);
+  
 
-    stopMotor();
-    delay(2000);
+     steering(0);
+     printf("steering\n");
+     delay(2000);
+    
 
-    driveReverse(1);
-    delay(2000);
+     stopMotor();
 
-    steering(0);
-    delay(2000);
-
-    stopMotor();
-
+     printf("completed");
 }

@@ -244,7 +244,7 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
 
 after the `breakup(...)` is called, the two 8-bit integers will be stored in the memory locations pointed ot by `low` and `high`.
 
-##  **task 02** the streering function
+##  **task 02** the steering function
 
 before we define the second task you needd some information about the servo motors on the car.  controlling the servo motor electronic speed controller with pwm is very similar to how we did so in the actuator lab.  however in this case we will be converting values ranging from 0 to 20 ms to 0 to 4095 cycles.
 

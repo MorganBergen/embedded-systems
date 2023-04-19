@@ -16,13 +16,13 @@ teammates
 4.  [**part 01** setting up the i2c via the metal library](#part-1-setting-up-the-i2c-via-the-metal-library)
 5.  [**part 02** configuring the pca9685](#part-02-configuring-the-pca9685)
 6.  [**part 03** using the transfer method to control the pca9695 servo control](#part-03-using-the-transfer-method-to-control-the-pca9695-servo-control)
-7.  `breakup()` [**task 01** the breakup function](#task-01-the-breakup-function)
-8.  `steering()`[**task 02** the streering function](#task-02-the-steering-function) 
+7.  [**task 01** the breakup function](#task-01-the-breakup-function) `breakup()` 
+8.  [**task 02** the streering function](#task-02-the-steering-function) `steering()`
 9.  [**part 04** using the transfer methdo to control the pca9695 motor control](#part-04-using-the-transfer-methdo-to-control-the-pca9695-motor-control)
-10. `stopMotor()` [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function)
-11. `driveForward()` [**task 04** drive forward function](#task-04-drive-forward-function)
-12. `driveReverse()` [**task 05** drive reverse function](#task-05-drive-reverse-function)
-13. `main()` [**task 06** fully controlling the pca9685](#task-06-fully-controlling-the-pca9685)
+10. [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function) `stopMotor()`
+11. [**task 04** drive forward function](#task-04-drive-forward-function) `driveForward()` 
+12. [**task 05** drive reverse function](#task-05-drive-reverse-function) `driveReverse()` 
+13. [**task 06** fully controlling the pca9685](#task-06-fully-controlling-the-pca9685) `main()`
 
 
 ```

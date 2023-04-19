@@ -17,7 +17,7 @@ teammates
 5.  [**part 02** configuring the pca9685](#part-02-configuring-the-pca9685)
 6.  [**part 03** using the transfer method to control the pca9695 servo control](#part-03-using-the-transfer-method-to-control-the-pca9695-servo-control)
 7.  [**task 01** the breakup function](#task-01-the-breakup-function) `breakup()` 
-8.  [**task 02** the streering function](#task-02-the-steering-function) `steering()`
+8.  [**task 02** the steering function](#task-02-the-steering-function) `steering()`
 9.  [**part 04** using the transfer methdo to control the pca9695 motor control](#part-04-using-the-transfer-methdo-to-control-the-pca9695-motor-control)
 10. [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function) `stopMotor()`
 11. [**task 04** drive forward function](#task-04-drive-forward-function) `driveForward()` 

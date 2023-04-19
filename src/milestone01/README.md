@@ -16,13 +16,13 @@ teammates
 4.  [**part 01** setting up the i2c via the metal library](#part-1-setting-up-the-i2c-via-the-metal-library)
 5.  [**part 02** configuring the pca9685](#part-02-configuring-the-pca9685)
 6.  [**part 03** using the transfer method to control the pca9695 servo control](#part-03-using-the-transfer-method-to-control-the-pca9695-servo-control)
-7.  [**task 01** the breakup function](#task-01-the-breakup-function)
-8.  [**task 02** the streering function](#task-02-the-steering-function) 
+7.  `breakup()` [**task 01** the breakup function](#task-01-the-breakup-function)
+8.  `steering()`[**task 02** the streering function](#task-02-the-steering-function) 
 9.  [**part 04** using the transfer methdo to control the pca9695 motor control](#part-04-using-the-transfer-methdo-to-control-the-pca9695-motor-control)
-10. [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function)
-11. [**task 04** drive forward function](#task-04-drive-forward-function)
-12. [**task 05** drive reverse function](#task-05-drive-reverse-function)
-13. [**task 06** fully controlling the pca9685](#task-06-fully-controlling-the-pca9685)
+10. `stopMotor()` [**task 03** calibrating and defining the top stop function](#task-03-calibrating-and-defining-the-top-stop-function)
+11. `driveForward()` [**task 04** drive forward function](#task-04-drive-forward-function)
+12. `driveReverse()` [**task 05** drive reverse function](#task-05-drive-reverse-function)
+13. `main()` [**task 06** fully controlling the pca9685](#task-06-fully-controlling-the-pca9685)
 
 
 ```
@@ -314,7 +314,7 @@ be advised:  these rc cars are designed to drive at very high speeds.  kep the v
 
 ##  **task 03** calibrating and defining the top stop function
 
-implement the following function to stop the wheels from moving.  the function also can be used to calibrate esc when first called with a 2 second delay.  this will be accomplished by setting the `LED0_OFF` to 280
+implement the following function to stop the wheels from moving.  the function also can be used to calibrate esc when first called with a 2 second delay.  this will be accomplished by setting the `LED0_OFF` to 280.  note:  `// example use stopMotor(); -> sets LED0_off to 280`
 
 ```c
 void stopMotor() {
@@ -324,10 +324,28 @@ void stopMotor() {
     bufWrite[2] = 0;
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
-// example use stopMotor(); -> sets LED0_off to 280
 ```
 
-###  explaination 
+###  explaination
+
+1.  `void stopMotor()` stop motor doesnt return a value nor does it require any parameters.
+
+2.  `breakup(280, &bufWrite[3], &bufWrite[4])` the breakup function is called with the value of `bigNum == 280`, `*low == &bufWrite[3]`, `*high = &bufWrite[4]`.  the breakup function breaks the value of 280 into two 8-bit parts and assigns them to `bufWrite[3]` and `bufWrite[4]`.  in this case, 280 in binar is $100011000_{(2)}$ and would then be split into a low byte of 24 as $00011000_{(2)}$ and a high byte of 1 $00000001_{(2)}$.
+
+3.  `bufWrite[0] = PCA9695_LED1_L + 4;` the value of `PCA9695_LED1_L + 4` is assigned to `bufWrite[0]`.  remember that `)CA9695_LED1_L` is a constant representing the base address for the LED1 channel.  adding 4 to this address selects the channel used for controlling the motor.
+
+4.  `bufWrite[1] = 0` and `bufWrite[2] = 0`, these two lines sets the values of bufWrite at index 1 and 2 to 0.  these bytes represent the ON time for the pwm signal, which is set to 0 to stop the motor.
+
+5.  `metal_i2c_tranfer(i2c, PCA9695_I2C_ADDRESS, bufWrite, 5, bufRead, 1);` this line calls the `metal_i2c_transfer` function, which is responsible for sending the I2C data to the PCA9695 device. he functions six parameters for reiteration is as follows
+
+    -  `i2c` is a pointer to the I2C device object
+    -  `PCA9695_I2C_ADDRESS` is the I2C address of the PCA9695 device
+    -  `bufWrite` is the buffer containing the data to be written
+    -  `5` is the number of bytes to to write (because `bufWrite` contains 5 bytes
+    -  `bufRead` is the buffer where the read data should be stored
+    -  `1` is the number of bytes to read
+
+in summary, the `stopMotor` function configures the pwm signal to stop the motor by setting the ON time to 0 and sending the I2C data data to the PCA9695 device.
 
 ##  **task 04** drive forward function
 
@@ -366,6 +384,31 @@ void driveForward(uint8_t speedFlag){
 // example luse:  driveForward(3); sets LED0_Off to 317
 ```
 
+###  explaination 
+
+1.  `void driveForward(uint8_t speedFlag)` doesnt return a value and takes the `speedFlag` as the single parameter which takes an unsigned 8-bit integer used to set the motor speed.
+
+2.  the `if` statement vlock checks the value of `speedFlag` and calls the `breakup` function with differing values depending on the speed level. and the `breakup` function breaks the given values into two 8-bit parts and assigns them to the `bufWrite[3]` and `bufWrite[4]`
+
+-  if `speedFlag` is 1 `breakup(313, &bufWrite[3], &bufWrite[4]);` is called
+-  if `speedFlag` is 2 `breakup(315, &bufWrite[3], &bufWrite[4]);` is called
+-  if `speedFlag` is 3 `breakup(317, &bufWrite[3], &bufWrite[4]);` is called
+
+3.  `bufWrite[0] = PCA9685_LED1_ON_L + 4` the value of `PCA9695_LED1_L + 4` is assigned to `bufWrite[0]` as `PCA9685_LED1_L` is a constant representing the base address for the LED1 channel.  adding 4 to this address selects the channel used for controlling the motor.
+
+4,.  `bufWrite[1] = 0;` and `bufWrite[2] = 0`, these lines sets index 1 and 2 of `bufWrite[]` to 0.  these bytes represent the ON time for the pwm signal which is set to 0 in order to start the motor.
+
+5.  `metal_i2c_transfer(i2c, PCA9585_I2C_ADDRESS, bufWrite, 5, bufRead, 1);` by calling `metal_i2c,transfer` function we are sending the I2C data to the PCA9685 device, the six parameters are again as follows,
+
+    -  `i2c` a pointer to the i2c device object
+    -  `PCA9685_I2C_ADDRESS` is the i2c address of the PCA9685 device
+    -  `bufWrite` contains the buffer of the data to be written
+    -  `5` is the number of bytes to write (because bufWrite contains 5 bytes)
+    -  `bufRead` is the buffer where the read data should be stored
+    -  `1` is the number of bytes to be read
+
+in summary, the `driveForward` function configures the motor to drive forward at the speed specififed by the `speedFlag` paramter.  it sets the appropriate values in the `bufWrite` buffer based on the desired speed and sends the data to the PCA9685 device using the `metal_i2c_transfer` function.  the motors speed is controlled by adjusting the OFF time of the pwm signal to the motor controller.
+
 ##  **task 05** drive reverse function
 
 implement the following function to make the wheels drive in reverse.  further details are provided below regarding the parameters and results.
@@ -403,8 +446,30 @@ void driveReverse(uint8_t speedFlag){
 }
 ```
 
-##  **task 06** fully controlling the pca9685
+###  explaination
 
+note:  the logic behind `driveForward` is analogous to this function, so the explaination will be a reiteration similar to `driveForward`
+
+1.  the `speedFlag` determines the speed at which the motor will drive in reverse.  the `speedFlag` is of type `uint8_t`
+
+2.  `if` block sets the appropriate values for the pwm sigansl's OFF time based on the valkue of `speedFlag`.  
+
+    -  if `speedFlag` is 1, the function calls `breakup(267, &bufWrite[3], &bufWrite[4])` to set the pwm OFF time value.
+    -  if `speedFlag` is 2, the function calls `breakup(265, &bufWrite[3], &bufWrite[4])` to set the pwm OFF time value.
+    -  if `speedFlag` is 3, the function calls `breakup(263, &bufWrite[3], &bufWrite[4])` to set the pwm OFF time value.
+
+3.  the `breakup()` function is called to split the 16-bit value for the pwm signal's off time into two 8-bit values.  these values are stored in `bufWrite[3]` (low 8 bits) and `bufWrite[4]` (high 8 bits)
+
+4.  the `bufWrite` is set to the following values
+
+    -  `bufWrite[0]` is assigned to the value `PCA9685_LED1_ON_L + 4` which sets the register address to control the motor
+    -  `bufWrite[1]` and `bufWrite[2]` are both assigned to the value `0`.  these two bytes represent the ON time of the pwm signal, which is set to 0 in this case.
+
+5.  finally the function calls `metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);` function sends the data to the PCA9685 at the specififed i2c address and updates the PCA9685's register accordingly.  this in turn configures the moto to drive in reverse at the specified speed.
+
+in summary, the `driveReverse` function configures the motor to drive in reverse at the speed determined by the `speedFlag` parameter.  it sets the appropriate values in the `bufWrite` buffer based on the desired speed and sends the data to the PCA9685 device using the `metal_i2c_transfer` function.  the motor's speed is controlled by adjusting the OFF time of the pwm signal sent to the motor controller.
+
+##  **task 06** fully controlling the pca9685
 
 using all your implemented functions perform the following sequence as follows:
 
@@ -418,7 +483,6 @@ using all your implemented functions perform the following sequence as follows:
 8.  stop the motors
 
 ```c
-
 int main() {
     set_up_I2C();
 
@@ -446,3 +510,7 @@ int main() {
     stopMotor();
 }
 ```
+
+###  explaination
+
+the main demonstrates a sequence of actions by calling the functions we previously defined.

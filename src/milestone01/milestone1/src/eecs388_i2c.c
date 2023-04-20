@@ -123,16 +123,15 @@ void steering(int angle){
  */
 
 void stopMotor() {
-    /*breakup(280, &bufWrite[3], &bufWrite[4]);
-    bufWrite[0] = PCA9685_LED0_OFF_L + 4;
-    bufWrite[1] = 0;
-    bufWrite[2] = 0;
-    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);*/
+
     breakup(280, &bufWrite[3], &bufWrite[4]);
+
     bufWrite[0] = PCA9685_LED0_ON_L ;
-    printf(PCA9685_LED0_ON_L);
+
     bufWrite[1] = 0;
+
     bufWrite[2] = 0;
+
     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
 /*
@@ -167,19 +166,6 @@ void driveForward(int speedFlag){
 
     breakup(313, &bufWrite[3], &bufWrite[4]);
 
-    // if (speedFlag == 1) {
-
-    //     breakup(313, &bufWrite[3], &bufWrite[4]);
-
-    // } else if (speedFlag == 2) {
-
-    //     breakup(315, &bufWrite[3], &bufWrite[4]);
-
-    // } else if (speedFlag == 3) {
-
-    //     breakup(317, &bufWrite[3], &bufWrite[4]);
-    // }
-  
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -199,6 +185,10 @@ void driveForward(int speedFlag){
 
 void driveReverse(uint8_t speedFlag){
 
+    bufWrite[0] = PCA9685_LED0_ON_L ;
+    bufWrite[1] = 0;
+    bufWrite[2] = 0;
+
     if (speedFlag == 1) {
 
         breakup(267, &bufWrite[3], &bufWrite[4]);
@@ -212,9 +202,6 @@ void driveReverse(uint8_t speedFlag){
         breakup(263, &bufWrite[3], &bufWrite[4]);
     }
 
-    bufWrite[0] = PCA9685_LED0_ON_L ;
-    bufWrite[1] = 0;
-    bufWrite[2] = 0;
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -234,40 +221,35 @@ int main() {
  *    -  stop the motor
  */
     
-    
-   
-
     set_up_I2C();
     printf("setup\n");
 
     stopMotor();
-     printf("stopmotor\n");
-     delay(2000);  
-    
+    printf("stopmotor\n");
+    delay(2000);  
 
-     steering(20);
+
+    steering(20);
     printf("steering\n");
-     delay(2000);
-   
+    delay(2000);
+
     driveForward(1);
     printf("drive\n");
-     delay(2000);
+    delay(2000);
 
-     stopMotor();
-     printf("stopmotor\n");
-     delay(2000);
-    
-     driveReverse(1);
-     printf("drivereverse\n");
-     delay(2000);
-  
+    stopMotor();
+    printf("stopmotor\n");
+    delay(2000);
 
-     steering(0);
-     printf("steering\n");
-     delay(2000);
-    
+    driveReverse(1);
+    printf("drivereverse\n");
+    delay(2000);
 
-     stopMotor();
+    steering(0);
+    printf("steering\n");
+    delay(2000);
 
-     printf("completed");
+    stopMotor();
+
+    printf("completed");
 }

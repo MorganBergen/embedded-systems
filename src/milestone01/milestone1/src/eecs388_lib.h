@@ -53,9 +53,6 @@
 #define PCA9685_I2C_ADDRESS 0x40
 #define PCA9685_MODE1 0x00      /**< Mode Register 1 */
 #define PCA9685_LED0_ON_L 0x06  /**< LED0 on tick, low byte*/
-#define PCA9685_LED0_ON_H 0x07  /**< LED0 on tick, low byte*/
-#define PCA9685_LED0_OFF_L 0x08  /**< LED0 on tick, low byte*/
-#define PCA9685_LED0_OFF_H 0x09  /**< LED0 on tick, low byte*/
 #define PCA9685_LED1_ON_L 0x0A  /**< LED0 on tick, low byte*/
 #define PCA9685_LED1_ON_H 0x0B
 #define PCA9685_LED1_OFF_L 0x0C 

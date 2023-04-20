@@ -102,7 +102,7 @@ void steering(int angle){
 
     int cycleVal = getServoCycle(angle);
     
-    bufWrite[0] = PCA9685_LED0_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L + 0x4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
 
@@ -227,7 +227,7 @@ int main() {
  *    -  drive forward (wait for 2 seconds)
  *    -  change the steering heading to 20 degrees (wait for 2 seconds)
  *    -  stop the motor (wait for 2 seconds)
- *    -  drive forward (wait for 2 seconds)
+ *    -  drive reverse (wait for 2 seconds)
  *    -  set steering heading to 0 degrees (wait for 2 seconds)
  *    -  stop the motor
  */
@@ -239,13 +239,16 @@ int main() {
     printf("stopmotor()\n");
     delay(2000);  
 
-
-    steering(20);
+    steering(-45);
     printf("steering(20)\n");
     delay(2000);
-
+    
     driveForward(1);
     printf("driveForward(1)\n");
+    delay(2000);
+
+    steering(45);
+    printf("steering(20)\n");
     delay(2000);
 
     stopMotor();
@@ -256,9 +259,12 @@ int main() {
     printf("driveReverse(1)\n");
     delay(2000);
 
-    steering(0);
+    steering(-45);
     printf("steering(0)\n");
     delay(2000);
+
+    
+   
 
     stopMotor();
     printf("stopMotor()");

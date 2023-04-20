@@ -78,7 +78,7 @@ void set_up_I2C(){
 
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
 
-    *low = bigNum & 0x00ff;
+    *low = bigNum & 0x00ff; 
 
     *high = (bigNum >> 8) & 0xff;
 }
@@ -225,28 +225,28 @@ int main() {
     printf("setup\n");
 
     stopMotor();
-    printf("stopmotor\n");
+    printf("stopmotor()\n");
     delay(2000);  
 
 
     steering(20);
-    printf("steering\n");
+    printf("steering(20)\n");
     delay(2000);
 
     driveForward(1);
-    printf("drive\n");
+    printf("driveForward(1)\n");
     delay(2000);
 
     stopMotor();
-    printf("stopmotor\n");
+    printf("stopmotor()\n");
     delay(2000);
 
     driveReverse(1);
-    printf("drivereverse\n");
+    printf("driveReverse(1)\n");
     delay(2000);
 
     steering(0);
-    printf("steering\n");
+    printf("steering(0)\n");
     delay(2000);
 
     stopMotor();

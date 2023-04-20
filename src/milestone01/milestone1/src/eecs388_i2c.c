@@ -102,7 +102,7 @@ void steering(int angle){
 
     int cycleVal = getServoCycle(angle);
     
-    bufWrite[0] = PCA9685_LED0_ON_L+4;
+    bufWrite[0] = PCA9685_LED0_ON_L + 4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
 
@@ -185,7 +185,7 @@ void driveForward(int speedFlag){
 
 void driveReverse(uint8_t speedFlag){
 
-    bufWrite[0] = PCA9685_LED0_ON_L ;
+    bufWrite[0] = PCA9685_LED0_ON_L;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
 

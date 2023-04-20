@@ -282,7 +282,7 @@ void steering(int angle){
     bufWrite[2] = 0;
 
     breakup(cycleVal, &bufWrite[3]. &bufWrite[4]);
-    success = metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
+    metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 ```
 

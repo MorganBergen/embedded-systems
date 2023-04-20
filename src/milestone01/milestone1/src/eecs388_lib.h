@@ -63,7 +63,10 @@
 #define PCA9685_LED1_OFF_L 0x0C 
 #define PCA9685_LED1_OFF_H 0x0D
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4841193 (defined PCA pins)
 #define PCA9685_PRESCALE 0xFE     /**< Prescaler for PWM output frequency */
 
 // MODE1 bits

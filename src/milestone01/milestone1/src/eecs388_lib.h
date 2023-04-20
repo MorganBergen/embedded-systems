@@ -41,8 +41,6 @@
 #define UART_IP             0x14        // interrupt pending register
 #define UART_DIV            0x18        // uart baud rate divisor
 
-
-
 #define UART_ADDR(devid) (UART0_CTRL_ADDR + devid * 0x10000)
 /***********************************************************
  *  Modifications for physical final project

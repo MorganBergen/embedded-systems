@@ -160,11 +160,22 @@ void stopMotor() {
 
 void driveForward(int speedFlag){
 
-    breakup(313, &bufWrite[3], &bufWrite[4]);
-    
     bufWrite[0] = PCA9685_LED0_ON_L;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
+
+    if (speedFlag == 1) {
+      
+        breakup(313, &bufWrite[3], &bufWrite[4]);
+    
+    } else if (speedFlag == 2) {
+
+        breakup(315, &bufWrite[3], &bufWrite[4]);
+
+    } else if (speedFlag == 3) {
+
+        breakup(317, &bufWrite[3], &bufWrite[4]);
+    }
 
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
@@ -222,7 +233,7 @@ int main() {
  */
     
     set_up_I2C();
-    printf("setup\n");
+    printf("set_\n");
 
     stopMotor();
     printf("stopmotor()\n");
@@ -250,6 +261,5 @@ int main() {
     delay(2000);
 
     stopMotor();
-
-    printf("completed");
+    printf("stopMotor()");
 }

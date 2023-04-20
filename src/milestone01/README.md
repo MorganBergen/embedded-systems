@@ -56,12 +56,12 @@ the car prototype that you are going to use has seven main components
 
 1.  hi-five board
 2.  pi board
-3.  motot driver `pca9695` 4-lidar
+3.  motor driver `pca9695` 4-lidar
 4.  dc motot
 5.  servo motot
 6.  electronic speed controller (ecs)
 
-your goal in this project is to first use the hi-five board to send i2c commands to `pca9695` to drive the servo motot (for streering) and dc motots (for moving forward and backwards) (milestone 1).  then connect pi to hi-five board using `uart`.  this is to set up a connection between the two boards for sending steering commands from the pi to the hi-five board (milestone 2).  lastly, you are going to control the car using a sequence of commands sending the streering commands from the pi to the hi-five board using `uart` and then to the motors using `pwm` i1c controller (milestone 3).
+your goal in this project is to first use the hi-five board to send i2c commands to `pca9695` to drive the servo motor (for streering) and dc motots (for moving forward and backwards) (milestone 1).  then connect pi to hi-five board using `uart`.  this is to set up a connection between the two boards for sending steering commands from the pi to the hi-five board (milestone 2).  lastly, you are going to control the car using a sequence of commands sending the streering commands from the pi to the hi-five board using `uart` and then to the motors using `pwm` i1c controller (milestone 3).
 
 the project must have a group of 4 individuals
 
@@ -282,13 +282,14 @@ void steering(int angle){
     bufWrite[2] = 0;
 
     breakup(cycleVal, &bufWrite[3]. &bufWrite[4]);
+
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 ```
 
 ###  explaination
 
-the `void steering(int angle` function sets the steering angle of the car by controlling the servo motor.  it accepst the input `angle`, we expect to be an integer value ranging from -45 to 45 degree, and then sends the corresponding pwm signal to the servo motor.
+the `void steering(int angle` function sets the steering angle of the car by controlling the servo motor.  it accepts the input `angle`, we expect to be an integer value ranging from -45 to 45 degree, and then sends the corresponding pwm signal to the servo motor.
 
 1.  `int cycleVal = getServoCycle(angle);` calls the `getServoCycle()` function which accepts the angle input and returns the corresponding pwn cycle value need to set teh servo motor to the angle.  we se the result is stored in `cycleVal` var.
 
@@ -319,9 +320,13 @@ implement the following function to stop the wheels from moving.  the function a
 ```c
 void stopMotor() {
     breakup(280, &bufWrite[3]. &bufWrite[4]);
-    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+
+    bufWrite[0] = PCA9685_LED1_ON_L;
+
     bufWrite[1] = 0;
+
     bufWrite[2] = 0;
+
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 ```
@@ -330,9 +335,9 @@ void stopMotor() {
 
 1.  `void stopMotor()` stop motor doesnt return a value nor does it require any parameters.
 
-2.  `breakup(280, &bufWrite[3], &bufWrite[4])` the breakup function is called with the value of `bigNum == 280`, `*low == &bufWrite[3]`, `*high = &bufWrite[4]`.  the breakup function breaks the value of 280 into two 8-bit parts and assigns them to `bufWrite[3]` and `bufWrite[4]`.  in this case, 280 in binar is $100011000_{(2)}$ and would then be split into a low byte of 24 as $00011000_{(2)}$ and a high byte of 1 $00000001_{(2)}$.
+2.  `breakup(280, &bufWrite[3], &bufWrite[4])` the breakup function is called with the value of `bigNum == 280`, `*low == &bufWrite[3]`, `*high = &bufWrite[4]`.  the breakup function breaks the value of 280 into two 8-bit parts and assigns them to `bufWrite[3]` and `bufWrite[4]`.  in this case, 280 in binary is $100011000_{(2)}$ and would then be split into a low byte of 24 as $00011000_{(2)}$ and a high byte of 1 $00000001_{(2)}$.
 
-3.  `bufWrite[0] = PCA9695_LED1_L + 4;` the value of `PCA9695_LED1_L + 4` is assigned to `bufWrite[0]`.  remember that `)CA9695_LED1_L` is a constant representing the base address for the LED1 channel.  adding 4 to this address selects the channel used for controlling the motor.
+3.  `bufWrite[0] = PCA9695_LED1_L + 4;` the value of `PCA9695_LED1_L + 4` is assigned to `bufWrite[0]`.  remember that `PCA9695_LED1_L` is a constant representing the base address for the LED1 channel.
 
 4.  `bufWrite[1] = 0` and `bufWrite[2] = 0`, these two lines sets the values of bufWrite at index 1 and 2 to 0.  these bytes represent the ON time for the pwm signal, which is set to 0 to stop the motor.
 
@@ -361,24 +366,15 @@ implement the following function to make the wheels drive forward.  further deta
 
 void driveForward(uint8_t speedFlag){
 
-    if (speedFlag == 1) {
-
-        breakup(313, &bufWrite[3], &bufWrite[4]);
-
-    } else if (speedFlag == 2) {
-
-        breakup(315, &bufWrite[3], &bufWrite[4]);
-
-    } else if (speedFlag == 3) {
-
-        breakup(317, &bufWrite[3], &bufWrite[4]);
-
-    }
-
-    bufWrite[0] = PCA9685_LED1_ON_L + 4;
+    bufWrite[0] = PCA9685_LED0_ON_L;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-    metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
+
+    if (speedFlag == 1) {
+        breakup(313, &bufWrite[3], &bufWrite[4]);
+    } else if (speedFlag == 2) {
+        breakup 
+
 }
 
 // example luse:  driveForward(3); sets LED0_Off to 317
@@ -532,3 +528,12 @@ the main demonstrates a sequence of actions by calling the functions we previous
 15. `stopMotor()` is called one last time to stop the motor
 
 in summary as the instructions stated, the main initailizes the i2c communication, calibrates the motor, sets the steering angle, drives the motor forward, changes the steering angle, stops the motor, drives the motor in reverse, sets the steering angle back to 0 degrees, and finally stops the motor again.
+
+
+### questions
+
+1.  what is the difference between stopmotor and driveforward
+
+2.  what is the difference between the steering and drive function
+
+3.  

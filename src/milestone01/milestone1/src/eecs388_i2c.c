@@ -126,7 +126,7 @@ void stopMotor() {
 
     breakup(280, &bufWrite[3], &bufWrite[4]);
 
-    bufWrite[0] = PCA9685_LED0_ON_L ;
+    bufWrite[0] = PCA9685_LED0_ON_L;
 
     bufWrite[1] = 0;
 

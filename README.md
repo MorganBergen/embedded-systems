@@ -13,7 +13,8 @@
 7.  [intro into embedded linux](./src/lab07)
 5.  [real time dnn inferencing](./src/lab08/)
 6.  [board to board communication](./src/lab09/)
-7.  [implement an RC car’s components](./src/milestone01/)
+7.  [implement an RC car’s components](./src/milestone01/): milestone01
+8.  [python on pi to communicate with hifive](./src/milestone02): milestone02
 
 **material**
 

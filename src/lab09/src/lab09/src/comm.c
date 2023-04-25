@@ -4,8 +4,7 @@
 
 #include "eecs388_lib.h"
 
-int main()
-{
+int main() {
     // initialize UART channels
     ser_setup(0); // uart0 (debug)
     ser_setup(1); // uart1 (raspberry pi)

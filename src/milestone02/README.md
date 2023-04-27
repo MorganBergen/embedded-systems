@@ -7,7 +7,7 @@
 
 ##  general
 
-instead of using terminals, you will now create a python program on the pi to communicate with the hifive.  your task is to send formatted command strings to the hifive that can control the steering angle, speed and duration of a command.  these commands will be supplied from a **csv** file on the pi.  in this milestone, you will implement the necessary code for parsing that input file and sending the correct values to the hifive from the pi.
+instead of using terminals, you will now create a python program on the pi to communicate with the hifive.  your task is to send formatted command strings to the hifive that can control the steering angle, speed, and duration of a command.  these commands will be supplied from a **csv** file on the pi.  in this milestone, you will implement the necessary code for parsing that input file and sending the correct values to the hifive from the pi.
 
 the following flowchart describes this milestone:
 

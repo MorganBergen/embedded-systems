@@ -1,5 +1,14 @@
 #  milestone 02
 
+###  teammates
+
+1. [Morgan Maha Bergen](https://github.com/MorganBergen)
+2. [Saje Ein Cowell](https://github.com/sajeyyy)
+3. [Collins Gatimi](https://github.com/Gatimio)
+4. [Charlie Gillund](https://github.com/ChuckGills)
+
+###  contents 
+
 1.  [general](#general)
 2.  [commands in pseudo](#commands-in-pseudo)
 3.  [tasks](#tasks)

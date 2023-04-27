@@ -50,7 +50,7 @@ a "command" consists of a speed value and a steering angle value that the car sh
 -  the angle value will be an integer between -45 and 45
 -  the speed value will be 1, 2, 3 for driving forward at different speeds
 -  the speed value will be -1, -2, -3 for drive backward at different speeds
--  the duraction will be the time, in _seconds_, for which that command should run
+-  the duration will be the time, in _seconds_, for which that command should run
 
 ### command literal `30, 2, 3`
 

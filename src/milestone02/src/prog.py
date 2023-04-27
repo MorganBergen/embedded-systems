@@ -17,5 +17,7 @@ with open(csv_filename, newline='') as csv_file:
         ser1.write(command_string.encode())
         print(command_string.len())
         time.sleep(duration)
+        # how large is the string
+        # if it was 30 for that one?
 
 ser1.close()

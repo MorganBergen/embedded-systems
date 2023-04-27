@@ -44,9 +44,35 @@ the csv file is done using the reader object.  the csv file is opened as a text 
 
 ```
 import csv
+import serial
+import time
 
-with open('milestone2.csv') as csv_file:
-    csv_reader = 
+# Open a serial connection to /dev/ttyAMA1
+ser1 = serial.Serial("/dev/ttyAMA1", 115200)
+
+# Open the CSV input file
+csv_filename = "milestone2.csv"  # Replace with the correct filename
+with open(csv_filename, newline='') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    
+    # Iterate through each row in the CSV file
+    for row in csv_reader:
+        # Read angle value, speed value, and duration value
+        angle = row[0]
+        speed = row[1]
+        duration = float(row[2])
+        
+        # Create the command string
+        command_str = f"angle:{angle},speed:{speed},duration:{duration}"
+        
+        # Write the command to /dev/ttyAMA1
+        ser1.write(command_str.encode())
+        
+        # Wait for the duration of the command before sending the next one
+        time.sleep(duration)
+
+# Close the serial connection
+ser1.close()
 ```
 
 after generating a command string, you will need to send it via the serial connection **uart** to the hifive from the pi.  at the hifive end, you will need to read in these command strings being sent from the pi and repeat them back to the pi using a different uart commection similar to what we did in this [board to board communication](../lab09/).

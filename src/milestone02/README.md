@@ -15,7 +15,7 @@ the following flowchart describes this milestone:
 
 a "command" consists of a speed value and a steering angle value that the car should be set to, and a duration value for how long to hold that configuration.  the commands in the input csv file will have the following format
 
-### command format`<angle value>, <speed value>, <duration>`
+### command format `<angle value>, <speed value>, <duration>`
 
 -  the angle value will be an integer between -45 and 45
 -  the speed value will be 1, 2, 3 for driving forward at different speeds

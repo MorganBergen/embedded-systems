@@ -5,6 +5,27 @@
 3.  [tasks](#tasks)
 4.  [submission](#submission)
 
+what is this error
+
+```bash
+m358b583@ENGR3002-18:~/Documents/eecs388/embedded-systems/src/milestone02/src$ python3 milestone2.csv 
+m358b583@ENGR3002-18:~/Documents/eecs388/embedded-systems/src/milestone02/src$ python3 prog.py 
+Traceback (most recent call last):
+  File "/home/c112h406/.platformio/penv/lib/python3.10/site-packages/serial/serialposix.py", line 322, in open
+    self.fd = os.open(self.portstr, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+FileNotFoundError: [Errno 2] No such file or directory: '/dev/ttyAMA1'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/m358b583/Documents/eecs388/embedded-systems/src/milestone02/src/prog.py", line 5, in <module>
+    ser1 = serial.Serial("/dev/ttyAMA1", 115200)
+  File "/home/c112h406/.platformio/penv/lib/python3.10/site-packages/serial/serialutil.py", line 244, in __init__
+    self.open()
+  File "/home/c112h406/.platformio/penv/lib/python3.10/site-packages/serial/serialposix.py", line 325, in open
+    raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
+```
+
 ##  general
 
 instead of using terminals, you will now create a python program on the pi to communicate with the hifive.  your task is to send formatted command strings to the hifive that can control the steering angle, speed, and duration of a command.  these commands will be supplied from a **csv** file on the pi.  in this milestone, you will implement the necessary code for parsing that input file and sending the correct values to the hifive from the pi.

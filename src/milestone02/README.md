@@ -26,7 +26,28 @@ a "command" consists of a speed value and a steering angle value that the car sh
 
 the command above means the car should steer to 30 degrees, move forward with speed flag 2, and hold this configuration for 3 seconds.  to read in the input file you can use python's **csv** library.  [here is a tutorial to on how ot use the csv library](https://realpython.com/python-csv/) for reference.  
 
+a csv file is a commana separated values file, a type of plain text file that uses specific structuring to arrange tabular data.  because it's a plain text file, it can contain only actual etxt data aka printable ASCII or unicode characters.
+
+```
+column 1 name, column 2 name, column 3 name
+first row data 1, first row data 2, first row data 3
+second row data 1, second row data 2, second row data 3
+```
+
+each piece of data is separated by a comma.  normally the first line identifies each piece of data - in other words the nae of a data column.  every subsequent line after that is actual data and is limited only by file size constraints.  in general, the separator character is called a delimiter, and the comma is not the only one used. other popular delimiters include the tab (\t), colon (:) and semi-colon (;) characters. properly parsing a CSV file requires us to know which delimiter is being used.
+
 after reading these values in from the input file on the pi, you will generate your command strings conatining the information you collected to be sent to the hifive.  the actual format of the command string is up to you; you can send them as is (i,e. as a string containing three values separated by commas), add additional text to indicate each parameter or you can use the sample format you will find below.
+
+###  csv library
+
+the csv file is done using the reader object.  the csv file is opened as a text file with python's built-in `open()` functiopn, which returns a file object.  this is then passed to the reader, which does does the heavy lifting.
+
+```
+import csv
+
+with open('milestone2.csv') as csv_file:
+    csv_reader = 
+```
 
 after generating a command string, you will need to send it via the serial connection **uart** to the hifive from the pi.  at the hifive end, you will need to read in these command strings being sent from the pi and repeat them back to the pi using a different uart commection similar to what we did in this [board to board communication](../lab09/).
 

@@ -47,4 +47,3 @@ based on the program behavior through the disassembly window of keil find out th
 10. in the location `C:0X034D` we can observe that the program is jumping to the `START` label using the `JNZ` opcode.  let's say a rookie programmer used `ACALL` instead of the `JNZ` opcode.  what could be the possible consequences if we use `ACALL` instead of `JNZ`?
 
     if the programmer used `ACALL` instead of `JNZ` at location `C:0x034D` the program would loop indefinitely in the `START` label subroutine, as the `ACALL` instruction would push the return address onto the stack and then jump to the subroutine, but there would be no instruction that would pop the return address of the stack and return control to the caller.  this would result in a stack overflow and eventually case the program to crash.
-

@@ -156,4 +156,21 @@ finally, after all of the commands are sent, the serial commections can be close
 
 `prog.py`
 
+##  terminal command
+
+`screen /dev/ttyAMA2 115200`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

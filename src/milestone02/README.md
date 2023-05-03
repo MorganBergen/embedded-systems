@@ -147,9 +147,13 @@ finally, after all of the commands are sent, the serial commections can be close
 ##  tasks 
 
 1.  wire up the hifive and the pi the way you did for lab 9 [board to board communication](../lab09/) 
+
 2.  on the hifive use the same program you wrote for lab 9 [board to board communication](../lab09/) for communicating between the hifive and raspeberry pi.  build and upload it to the hifive to get it ready to receive the command strings from the pi.
+
 3.  on the pi, create a python source file called `prog.py` and write your python code inside this file.
+
 4.  download the input csv file, you need to read this file in your python code to get the commands.
+
 5.  open a new terminal window and run the screen command which receives characters (i.e. run screen with `/dev/ttyAMA2`) run your python program and demonstrate the transferring of information. execute the program as `python prog.py` 
 
 ##  submission
@@ -159,17 +163,6 @@ finally, after all of the commands are sent, the serial commections can be close
 ##  terminal command
 
 `screen /dev/ttyAMA2 115200`
-
-
-
-
-
-
-
-
-
-
-
 
 
 

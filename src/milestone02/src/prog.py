@@ -2,7 +2,7 @@ import csv
 import serial
 import time
 
-ser1 = serial.Serial("/dev/ttyAMA1", 115200)
+ser1 = serial.Serial("/dev/ttyAMA1/", 115200)
 
 csv_filename = "milestone02.csv"
 with open(csv_filename, newline='') as csv_file:

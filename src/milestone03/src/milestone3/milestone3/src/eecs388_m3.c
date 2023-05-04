@@ -1,4 +1,4 @@
-#include <stdio.h>
+include <stdio.h>
 #include <stdint.h>
 #include "eecs388_lib.h"
 #include "metal/i2c.h"
@@ -10,7 +10,7 @@ uint8_t bufRead[1];
 
 
 //The entire setup sequencebigNum
-void set_up_I2C() {
+void set_up_I2C(){
     uint8_t oldMode;
     uint8_t newMode;
     _Bool success;
@@ -22,14 +22,14 @@ void set_up_I2C() {
    
     i2c = metal_i2c_get_device(0);
 
-    if (i2c == NULL) {
+    if(i2c == NULL){
         printf("Connection Unsuccessful\n");
     }
-    else {
+    else{
         printf("Connection Successful\n");
     }
    
-    // setup sequence
+    //Setup Sequence
     metal_i2c_init(i2c,I2C_BAUDRATE,METAL_I2C_MASTER);
     success = metal_i2c_write(i2c,PCA9685_I2C_ADDRESS,2,bufWrite,METAL_I2C_STOP_DISABLE);//reset
     delay(100);
@@ -50,7 +50,6 @@ void set_up_I2C() {
     bufWrite[0] = PCA9685_PRESCALE;//Setting PWM prescale
     bufWrite[1] = 0x79;
     success = metal_i2c_write(i2c,PCA9685_I2C_ADDRESS,2,bufWrite,METAL_I2C_STOP_DISABLE);//sets prescale
-                                                                                         //
     bufWrite[0] = PCA9685_MODE1;
     bufWrite[1] = 0x01 | MODE1_AI | MODE1_RESTART;
     printf("on setting is %d\n", bufWrite[1]);
@@ -80,6 +79,7 @@ void set_up_I2C() {
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
 
     *low = bigNum & 0x00ff;
+
     *high = (bigNum >> 8) & 0xff;
 }
 
@@ -101,10 +101,13 @@ void breakup(int bigNum, uint8_t* low, uint8_t* high){
 void steering(int angle){
 
     int cycleVal = getServoCycle(angle);
+   
     bufWrite[0] = PCA9685_LED0_ON_L+4;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
+
     breakup(cycleVal, &bufWrite[3], &bufWrite[4]);
+ 
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -122,9 +125,13 @@ void steering(int angle){
 void stopMotor() {
 
     breakup(280, &bufWrite[3], &bufWrite[4]);
+
     bufWrite[0] = PCA9685_LED0_ON_L ;
+
     bufWrite[1] = 0;
+
     bufWrite[2] = 0;
+
     metal_i2c_transfer(i2c,PCA9685_I2C_ADDRESS,bufWrite,5,bufRead,1);
 }
 /*
@@ -170,6 +177,9 @@ void driveForward(int speedFlag){
         breakup(317, &bufWrite[3], &bufWrite[4]);
     }
 
+   
+   printf("Drive forward\n");
+
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -187,25 +197,25 @@ void driveForward(int speedFlag){
  * ex: driveReverse(1);
  */
 
-void driveReverse(uint8_t speedFlag){
-
+void driveReverse( int speedFlag){
+   
     bufWrite[0] = PCA9685_LED0_ON_L ;
     bufWrite[1] = 0;
     bufWrite[2] = 0;
-
-    if (speedFlag == 1) {
-
+   
+    if (speedFlag == -1) {
+       
         breakup(267, &bufWrite[3], &bufWrite[4]);
 
-    } else if (speedFlag == 2) {
+    } else if (speedFlag == -2) {
 
         breakup(265, &bufWrite[3], &bufWrite[4]);
 
-    } else if (speedFlag == 3) {
+    } else if (speedFlag == -3) {
 
         breakup(263, &bufWrite[3], &bufWrite[4]);
     }
-
+    printf("Drive reverse \n");
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
@@ -214,13 +224,14 @@ int raspberrypi_int_handler(int devid, int * angle, int * speed, int * duration)
     char * str = malloc(50 * sizeof(char));
     int serial;
    
-    do {
-        serial = ser_readline(devid, 50, str);
-        if (serial > 0) {
-            sscanf(str, "%d %d %d", angle, speed, duration);
-            printf("Received values: angle=%d, speed=%d, duration=%d\n", *angle, *speed, *duration);
-        }
-    } while (serial > 0);
+   
+        ser_readline(devid,50, str);
+       // if (serial> 0) {
+        sscanf(str, "%d %d %d ", angle, speed, duration);
+        printf("Received values: angle=%d, speed=%d, duration=%d\n", *angle, *speed, *duration);
+     //   }
+
+   
    
     free(str);
     return serial;
@@ -252,32 +263,34 @@ int main()
         if (ser_isready(1))
         {
             printf("Data is available\n");
-
+            duration=0;
             int serial = raspberrypi_int_handler(1, &angle, &speed, &duration);
-
+            printf("Received values Outside: angle=%d, speed=%d, duration=%d\n", angle, speed, duration);
+            steering(angle);
+            printf("Steering \n");
             if (-4 < speed && speed < 0)
             {
                 driveReverse(speed);
+                printf("RDriving\n");
             }
             else if (4 > speed && speed > 0)
             {
                 driveForward(speed);
+                printf("Driving\n");
             }
-            else
+            else if (speed==0)
             {
                 stopMotor();
                 printf("Motor stopped\n");
             }
 
             delay(duration * 1000);
+            printf("Delaying %d seconds\n",duration);
+           
+
         }
-        else
-        {
-            printf("No data available\n");
-            delay(50); // Wait for 50ms before checking again
-        }
+       
     }
 
     return 0;
 }
-

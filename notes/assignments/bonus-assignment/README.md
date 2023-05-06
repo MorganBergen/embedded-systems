@@ -1,5 +1,9 @@
 #  buffer overload attack
 
+**morgan bergen**
+
+**may 5 2023**
+
 ###  contents
 
 1.  [intro](#intro)
@@ -64,18 +68,3 @@ int get_item_from_list(char* str1) {
     return NULL;
 }
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

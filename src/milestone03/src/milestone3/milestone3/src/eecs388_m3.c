@@ -75,7 +75,6 @@ void set_up_I2C(){
  * variable1 -> low 8 bits of 2000
  * variable2 -> high 8 bits of 2000
  */   
-
 void breakup(int bigNum, uint8_t* low, uint8_t* high){
 
     *low = bigNum & 0x00ff;
@@ -184,7 +183,7 @@ void driveForward(int speedFlag){
 }
 
 /*
- * motor Reverse
+ * motor Reverse commenting
  * task 5: using bufWrite, bufRead, breakup(), and metal_i2c_transfer(), implement the function
  * made above to Drive the motor backward. the given speedFlag will alter the motor speed as follows:
  *
@@ -204,93 +203,67 @@ void driveReverse( int speedFlag){
     bufWrite[2] = 0;
    
     if (speedFlag == -1) {
-       
         breakup(267, &bufWrite[3], &bufWrite[4]);
-
     } else if (speedFlag == -2) {
-
         breakup(265, &bufWrite[3], &bufWrite[4]);
-
     } else if (speedFlag == -3) {
-
         breakup(263, &bufWrite[3], &bufWrite[4]);
     }
     printf("Drive reverse \n");
     metal_i2c_transfer(i2c, PCA9685_I2C_ADDRESS, bufWrite, 5, bufRead, 1);
 }
 
-int raspberrypi_int_handler(int devid, int * angle, int * speed, int * duration)
-{
+int raspberrypi_int_handler(int devid, int * angle, int * speed, int * duration) {
     char * str = malloc(50 * sizeof(char));
-    int serial;
-   
-   
-        ser_readline(devid,50, str);
-       // if (serial> 0) {
-        sscanf(str, "%d %d %d ", angle, speed, duration);
-        printf("Received values: angle=%d, speed=%d, duration=%d\n", *angle, *speed, *duration);
-     //   }
-
-   
-   
+    int serial;  
+    ser_readline(devid,50, str);
+    sscanf(str, "%d %d %d ", angle, speed, duration);
+    printf("Received values: angle=%d, speed=%d, duration=%d\n", *angle, *speed, *duration);
+    printf(str.len());
     free(str);
-    return serial;
+    return (serial);
 }
 
 
-int main()
-{
-    // Initialize I2C
+int main() {
+    // initialize I2C
     set_up_I2C();
     delay(2000);
-
-    // Calibrate Motor
-    printf("Calibrate Motor.\n");
+    // calibrate motor
+    printf("calibrate motor \n");
     stopMotor();
     delay(2000);
-
-    // Initialize UART channels
+    // initialize UART channels
     ser_setup(0); // uart0 (receive from raspberry pi)
     ser_setup(1);
-
-    printf("Setup completed.\n");
-    printf("Begin the main loop.\n");
-
-    // Drive loop
+    printf("setup completed.\n");
+    printf("begin the main loop.\n");
+    // drive loop
     int angle, speed, duration;
-    while (1)
-    {
-        if (ser_isready(1))
-        {
-            printf("Data is available\n");
-            duration=0;
+    while (true) {
+        if (ser_isready(1)) {
+            printf("data is available\n");
+            duration = 0;
             int serial = raspberrypi_int_handler(1, &angle, &speed, &duration);
-            printf("Received values Outside: angle=%d, speed=%d, duration=%d\n", angle, speed, duration);
+            printf("received values outside pi hivefive: angle=%d, speed=%d, duration=%d\n", angle, speed, duration);
             steering(angle);
             printf("Steering \n");
-            if (-4 < speed && speed < 0)
-            {
+            if (-4 < speed && speed < 0) {
                 driveReverse(speed);
-                printf("RDriving\n");
+                printf("reverse driving\n");
             }
-            else if (4 > speed && speed > 0)
-            {
+            else if (4 > speed && speed > 0) {
                 driveForward(speed);
-                printf("Driving\n");
+                printf("drive forward\n");
             }
-            else if (speed==0)
-            {
+            else if (speed == 0) {
                 stopMotor();
-                printf("Motor stopped\n");
+                printf("motor stopped\n");
             }
-
             delay(duration * 1000);
             printf("Delaying %d seconds\n",duration);
-           
-
         }
-       
     }
 
-    return 0;
+    return(0);
 }

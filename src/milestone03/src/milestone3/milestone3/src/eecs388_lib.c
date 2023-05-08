@@ -3,8 +3,7 @@
 
 char __buf[80];
 
-void gpio_mode(int gpio, int mode)
-{
+void gpio_mode(int gpio, int mode) {
   uint32_t val;
   
   if (mode == OUTPUT) {
@@ -26,8 +25,7 @@ void gpio_mode(int gpio, int mode)
   return;
 }
 
-void gpio_write(int gpio, int state)
-{
+void gpio_write(int gpio, int state) {
   uint32_t val = *(volatile uint32_t *) (GPIO_CTRL_ADDR + GPIO_OUTPUT_VAL);
   if (state == ON) 
     val |= (1<<gpio);
